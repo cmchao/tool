@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+import os
+import sys
+import re
+import subprocess
+
+
+def findgcc(path):
+    for root, dirs, names in os.walk(path):
+        for filename in names:
+	    if re.match("^arm-.*-gcc$", filename):
+                return os.path.join(root, filename)
+		print yes
+
+    raise Exception('File not found')
+
+home = os.getenv('HOME')
+toolpath = os.getenv('TOOLBOX', home + "/tool");
+if not toolpath :
+    print "can't get home directory"
+    exit(1)
+
+xtoolpath = toolpath + "/x-tools"
+
+
+search_list = [xtoolpath, ]
+new_list = []
+select_list = []
+
+while search_list :
+    for item in search_list :
+    	new_list += [item + "/" + path for path in os.listdir(item)]
+
+    del search_list[:]
+
+    for item in new_list :
+    	m = re.match(".*/arm-.*-.*-?", item);
+	d = os.path.isdir(item)
+	if not m and d:
+	    search_list.append(item)
+	elif d:
+	    select_list.append(item)
+
+    del new_list[:]
+
+xtools = dict()
+xtools_idx = dict()
+idx = 1
+for xtool in select_list:
+    bindir = xtool + "/bin"
+    if os.path.exists(bindir):
+    	try:
+            gcc = findgcc(bindir)
+	except:
+	    print 'ignore : ' + bindir
+
+	p1 = subprocess.Popen([gcc,"-v"], stderr=subprocess.PIPE)
+	version = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
+	p1.stderr.close()
+	version = version.communicate()[0]
+	version = version[:-1]
+	xtools[version] = bindir
+	xtools_idx[idx] = version
+	idx += 1
+
+
+for idx in xtools_idx.keys():
+    print "%s : %s" % (idx, xtools_idx[idx])
+
+while True :
+    try:
+        choice = raw_input("Choice [q for quit] : ")
+        if choice == 'q':
+            exit(0)
+        elif xtools_idx.has_key(int(choice)):
+	    pass
+	break
+    except ValueError:
+        pass
+
+    
