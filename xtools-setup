@@ -62,6 +62,7 @@ for item in select_list:
     if os.path.exists(bindir):
     	try:
             prefix, xtools = find_tool(bindir)
+	    xtools['prefix'] = prefix
 	except:
 	    print 'ignore : ' + bindir
             continue
@@ -77,7 +78,7 @@ for item in select_list:
             xtools['vendor'] = m.group(4)
             xtools['gcc'] = [xtools['gcc'], version, m.group(3)]
         except:
-            pass
+	    xtools['gcc'] =[None, None, None]
 
 
         try:
@@ -90,7 +91,7 @@ for item in select_list:
 
 	    xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
         except:
-            pass
+	    xtools['binutil'] =[None, None, None]
 
 
         try:
@@ -108,12 +109,13 @@ for item in select_list:
         xtools_list.append(xtools)
 
 
-print "%-5s%-70s%-15s%-20s%-15s" % ("", 'Vendor', 'gcc', 'binutils', 'gdb')
+print "%-3s%-30s%-40s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
 for idx in range(len(xtools_list)):
-    print "%-5s%-70s%-15s%-20s%-15s" % (idx + 1, xtools_list[idx]['vendor'], 
-                                                             xtools_list[idx]['gcc'][2], 
-                                                             xtools_list[idx]['binutil'][2], 
-                                                              xtools_list[idx]['gdb'][2])
+    print "%-3s%-30s%-40s%-15s%-20s%-15s" % (idx + 1, xtools_list[idx]['prefix'], 
+                                                      xtools_list[idx]['vendor'], 
+                                                      xtools_list[idx]['gcc'][2], 
+                                                      xtools_list[idx]['binutil'][2], 
+                                                      xtools_list[idx]['gdb'][2])
 
 while True :
     try:
