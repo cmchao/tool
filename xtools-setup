@@ -62,6 +62,7 @@ for item in select_list:
     if os.path.exists(bindir):
     	try:
             prefix, xtools = find_tool(bindir)
+	    xtools['path'] = item
 	    xtools['prefix'] = prefix
 	except:
 	    print 'ignore : ' + bindir
