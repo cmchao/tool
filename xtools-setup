@@ -5,14 +5,26 @@ import re
 import subprocess
 
 
-def findgcc(path):
+def find_tool(path):
+    pattern = {"^arm-.*-gcc$" : 'gcc',
+               "^arm-.*-gdb$" : 'gdb',
+               "^arm-.*-readelf$" : 'binutil'}
+    ret = dict()
+    prefix = ""
+
     for root, dirs, names in os.walk(path):
         for filename in names:
-	    if re.match("^arm-.*-gcc$", filename):
-                return os.path.join(root, filename)
-		print yes
+            for item in pattern.keys():
+                if re.match(item, filename):
+                    ret[pattern[item]] = os.path.join(root, filename)
+                    if not prefix:
+                        m = re.match('(arm-.*-.*)-(\w*)', filename)
+                        prefix = m.group(1)
 
-    raise Exception('File not found')
+    if not ret:
+        raise Exception('File not found')
+    else:
+        return prefix, ret
 
 home = os.getenv('HOME')
 toolpath = os.getenv('TOOLBOX', home + "/tool");
@@ -44,38 +56,74 @@ while search_list :
     del new_list[:]
 
 xtools = dict()
-xtools_idx = dict()
-idx = 1
-for xtool in select_list:
-    bindir = xtool + "/bin"
+xtools_list = [] 
+for item in select_list:
+    bindir = item + "/bin"
     if os.path.exists(bindir):
     	try:
-            gcc = findgcc(bindir)
+            prefix, xtools = find_tool(bindir)
 	except:
 	    print 'ignore : ' + bindir
+            continue
+            
+        try:
+            p1 = subprocess.Popen([xtools['gcc'],"-v"], stderr=subprocess.PIPE)
+            p2 = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
+            p1.stderr.close()
 
-	p1 = subprocess.Popen([gcc,"-v"], stderr=subprocess.PIPE)
-	version = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
-	p1.stderr.close()
-	version = version.communicate()[0]
-	version = version[:-1]
-	xtools[version] = bindir
-	xtools_idx[idx] = version
-	idx += 1
+            version = p2.communicate()[0].rstrip('\n')
+            m = re.match("(\w+) (\w+) ([\w\.]+) (.+)", version)
+
+            xtools['vendor'] = m.group(4)
+            xtools['gcc'] = [xtools['gcc'], version, m.group(3)]
+        except:
+            pass
 
 
-for idx in xtools_idx.keys():
-    print "%s : %s" % (idx, xtools_idx[idx])
+        try:
+	    p1 = subprocess.Popen([xtools['binutil'], "-v"], stdout=subprocess.PIPE)
+	    p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
+	    p1.stdout.close()
+
+            version = p2.communicate()[0].rstrip('\n')
+            m = re.match("(.+) (.+)$", version)
+
+	    xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
+        except:
+            pass
+
+
+        try:
+	    p1 = subprocess.Popen([xtools['gdb'], "-v"], stdout=subprocess.PIPE)
+	    p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
+	    p1.stdout.close()
+
+            version = p2.communicate()[0].rstrip('\n')
+            m = re.match("(.+) (.+)$", version)
+
+	    xtools['gdb'] =[xtools['gdb'], version, m.group(2)]
+        except:
+	    xtools['gdb'] =[None, None, None]
+
+        xtools_list.append(xtools)
+
+
+print "%-5s%-70s%-15s%-20s%-15s" % ("", 'Vendor', 'gcc', 'binutils', 'gdb')
+for idx in range(len(xtools_list)):
+    print "%-5s%-70s%-15s%-20s%-15s" % (idx + 1, xtools_list[idx]['vendor'], 
+                                                             xtools_list[idx]['gcc'][2], 
+                                                             xtools_list[idx]['binutil'][2], 
+                                                              xtools_list[idx]['gdb'][2])
 
 while True :
     try:
         choice = raw_input("Choice [q for quit] : ")
         if choice == 'q':
             exit(0)
-        elif xtools_idx.has_key(int(choice)):
+        elif int(choice) < len(xtools_list):
 	    pass
 	break
     except ValueError:
         pass
 
-    
+   
