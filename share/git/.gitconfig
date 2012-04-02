@@ -1,0 +1,70 @@
+[user]
+    name = Chih-Min Chao
+    email = cmchao@gmail.com
+
+[alias]
+    ama = am --abort
+    amc = am --continue
+    ap = apply
+    br = branch --color
+    ce = cvsexportcommit -c
+    ci = commit
+    cia = commit -a
+    cio = commit -o
+    ca = commit --amend
+    co = checkout
+    cp = cherry-pick
+    cdf = clean -d -f
+    ft = format-patch
+    rbc = rebase --continue
+    rba = rebase --abort
+    sr = svn rebase
+    sd = svn dcommit
+    st = status -s
+    sta = stash apply
+    rb = rebase
+    rt = reset
+    rth = reset --hard
+    rth1 = reset --hard HEAD~1
+    rth2 = reset --hard HEAD~2
+    rth3 = reset --hard HEAD~3
+    df = diff
+    praise = blame 
+
+[apply]
+    whitespace = strip
+
+[diff]
+    color = auto
+    rename = copy 
+
+[pager]
+    color = true 
+    status = true
+
+[status]
+    color = auto
+
+[core]
+    excludesfile = /home/cmchao/.gitignore
+    editor = /usr/bin/vim
+    pager = less -FXRS
+
+[push]
+    default = tracking
+
+[sendemail]
+    smtpencryption = tls
+    smtpserver = smtp.gmail.com
+    smtpuser = cmchao@gmail.com
+    smptserverport = 587
+    suppresscc = all
+    
+[giggle]
+	main-window-maximized = false
+	main-window-geometry = 1132x760+125+102
+	main-window-view = TerminalView
+	history-view-vpane-position = 434
+	file-view-vpane-position = 381
+	file-view-hpane-position = 258
+

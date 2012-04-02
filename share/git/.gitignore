@@ -1,0 +1,9 @@
+*.[oa]
+autom4te.cache
+a.out
+tags
+*.swp
+*.orig
+*.old
+*.dep
+.*.cmd
