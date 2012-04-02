@@ -1,0 +1,124 @@
+source ~/.git-completion.bash
+
+# add your local .bashrc customization here #shell setting 
+function jobcount {
+   jobs | wc -l | tr -d " "
+}
+
+function mc {
+   mkdir $1 && cd $1
+}
+
+
+#
+# start ssh agent
+#
+function start_agent {
+    echo "Initialising new SSH agent..."
+    if [ $SSH_AGENT_PID == "" ]; then
+        /usr/bin/ssh-agent -s
+        /usr/bin/ssh-add
+    fi
+}
+
+start_agent;
+
+
+set -o vi
+#CDPATH="/NOBACKUP"
+EDITOR="vim"
+
+#set prompt
+#PS1='\u@\h \[\033[1;36m\]\w\[\033[0m\][${WINDOW}][\[\033[1;32m\]`jobcount`\[\033[0m\]]$ '
+PS1='\u@\h\[\e[1;36m\] \w$(__git_ps1 "\[\e[1;32m\] <%s>\[\e[1;34m\]") \[\e[1;33m\][${WINDOW}]\[\033[1;32m\][`jobcount`]\[\e[m\]$ '
+
+function prompt_command {
+
+TERMWIDTH=${COLUMNS}
+
+#   Calculate the width of the prompt:
+
+hostnam=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
+#   "whoami" and "pwd" include a trailing newline
+usernam=$(whoami)
+let usersize=$(echo -n $usernam | wc -c | tr -d " ")
+newPWD="${PWD}"
+let pwdsize=$(echo -n ${newPWD} | wc -c | tr -d " ")
+#   Add all the accessories below ...
+let promptsize=$(echo -n "--(${usernam}@${hostnam})---(${PWD})--" \
+                 | wc -c | tr -d " ")
+let fillsize=${TERMWIDTH}-${promptsize}
+fill=""
+while [ "$fillsize" -gt "0" ] 
+do 
+   fill="${fill}-"
+   let fillsize=${fillsize}-1
+done
+
+if [ "$fillsize" -lt "0" ]
+then
+   let cut=3-${fillsize}
+   newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cut\}\)\(.*\)/\2/")"
+fi
+}
+
+#PROMPT_COMMAND=`prompt_command`
+
+umask 022
+#if [ -t 0 ]; then
+#	# if interactive shell
+#	unalias ls
+#fi
+export CVS_RSH=ssh
+export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.sh=01;32:*.csh=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tz=01;31:*.rpm=01;31:*.cpio=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.xbm=01;35:*.xpm=01;35:*.png=01;35:*.tif=01;35:'
+
+export MYTOOL="${HOME}/tool"
+export PATH="${MYTOOL}/bin:$PATH"
+export PERL5LIB="${MYTOOL}/lib/perl5:${MYTOOL}/lib/perl5/site_perl/5.8.7"
+export PYTHONPATH="${MYTOOL}/lib/python"
+export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
+export MANPATH="$MANPATH:${MYTOOL}/man:${MYTOOL}/share/man"
+export LD_LIBRARY_PATH="${HOME}/tool/lib"
+export ARM_TOOLPATH="$HOME/tool/x-tools/arm-none-linux-gnueabi"
+
+#color manpage
+export PAGER="/usr/bin/less -s"
+export BROWSER="$PAGER"
+export LESS_TERMCAP_mb=$'\E[0;36m'
+export LESS_TERMCAP_md=$'\E[0;36m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[0;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[0;33m'
+#prompt
+
+#PS1='\u@\h \w[S: ${SCRN#/dev/tty}][`jobcount`]\$ '
+
+
+alias cd2="cd ../../"
+alias cd3="cd ../../../"
+alias cd4="cd ../../../../"
+alias cd5="cd ../../../../../"
+alias cd6="cd ../../../../../../"
+alias dir="ls -al"
+alias dush="du -sh"
+alias codefmt="astyle --style=linux --indent=tab=8"
+alias codeqemu="astyle --style=linux --indent=spaces=4"
+alias cvsrip="perl -pi -e \"s/^cvs update: .*\n//\""
+alias gnb="grep -E -R -n --binary-files=without-match --exclude=\"tags\""
+alias gcsize="du -sh ./.git && git gc && du -sh ./.git"
+alias m="less -R"
+alias makearm="make ARCH=arm CROSS_COMPILE=arm-"
+alias makelog="rm -rf log && make 2>&1 | tee log"
+alias mcm="make clean && make"
+alias more="less -R"
+alias ll="ls -alF"
+alias ls="ls -F --color"
+alias less="less -R"
+alias l="less -R"
+alias psme="ps aux | grep $LOGNAME"
+alias rm="rm -i"
+alias s="screen"
+alias vd="vimdiff"
+alias vimo="vim -O"
