@@ -9,11 +9,17 @@ function mc {
    mkdir $1 && cd $1
 }
 
+function setup-xtools-env {
+    xtoolpath=`/tmp/config-query 'xtools.toolpath'`
+    if [ $? -eq 0 ]; then
+        export ARM_TOOLPATH="${xtoolpath}"
+    fi
+}
 
 #
 # start ssh agent
 #
-function start_agent {
+function start-agent {
     echo "Initialising new SSH agent..."
     if [ $SSH_AGENT_PID == "" ]; then
         /usr/bin/ssh-agent -s
@@ -21,7 +27,8 @@ function start_agent {
     fi
 }
 
-start_agent;
+start-agent;
+setup-xtools-env;
 
 
 set -o vi
@@ -79,7 +86,6 @@ export PYTHONPATH="${MYTOOL}/lib/python"
 export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
 export MANPATH="$MANPATH:${MYTOOL}/man:${MYTOOL}/share/man"
 export LD_LIBRARY_PATH="${HOME}/tool/lib"
-export ARM_TOOLPATH="$HOME/tool/x-tools/arm-none-linux-gnueabi"
 
 #color manpage
 export PAGER="/usr/bin/less -s"
