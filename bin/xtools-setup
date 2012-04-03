@@ -3,6 +3,7 @@ import os
 import sys
 import re
 import subprocess
+import optparse 
 
 
 def find_tool(path):
@@ -26,107 +27,150 @@ def find_tool(path):
     else:
         return ret
 
-home = os.getenv('HOME')
-toolpath = os.getenv('TOOLBOX', home + "/tool");
-if not toolpath :
-    print "can't get home directory"
-    exit(1)
+def show_avalable_tool(xtools_list):
+    print "%-3s%-30s%-40s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
+    for idx in xrange(len(xtools_list)):
+        print "%-3s%-30s%-40s%-15s%-20s%-15s" % (idx + 1, xtools_list[idx]['prefix'], 
+                                                          xtools_list[idx]['vendor'], 
+                                                          xtools_list[idx]['gcc'][2], 
+                                                          xtools_list[idx]['binutil'][2], 
+                                                          xtools_list[idx]['gdb'][2])
 
-xtoolpath = toolpath + "/x-tools"
+
+def search_tool():
+    home = os.getenv('HOME')
+    toolpath = os.getenv('TOOLBOX', home + "/tool");
+    if not toolpath :
+        print "can't get home directory"
+        exit(1)
+
+    xtoolpath = toolpath + "/x-tools"
 
 
-search_list = [xtoolpath, ]
-new_list = []
-select_list = []
+    search_list = [xtoolpath, ]
+    new_list = []
+    select_list = []
 
-while search_list :
-    for item in search_list :
-        new_list += [item + "/" + path for path in os.listdir(item)]
+    while search_list :
+        for item in search_list :
+            new_list += [item + "/" + path for path in os.listdir(item)]
 
-    del search_list[:]
+        del search_list[:]
 
-    for item in new_list :
-        m = re.match(".*/arm-.*-.*-?", item);
-        d = os.path.isdir(item)
-        if not m and d:
-            search_list.append(item)
-        elif d:
-            select_list.append(item)
+        for item in new_list :
+            m = re.match(".*/arm-.*-.*-?", item);
+            d = os.path.isdir(item)
+            if not m and d:
+                search_list.append(item)
+            elif d:
+                select_list.append(item)
 
-    del new_list[:]
-    
-xtools = dict()
-xtools_list = [] 
-for item in select_list:
-    bindir = item + "/bin"
-    if os.path.exists(bindir):
+        del new_list[:]
+        
+    xtools = dict()
+    xtools_list = [] 
+    for item in select_list:
+        bindir = item + "/bin"
+        if os.path.exists(bindir):
+            try:
+                xtools = find_tool(bindir)
+                xtools['path'] = item
+            except:
+                print 'ignore : ' + bindir
+                continue
+                
+            try:
+                p1 = subprocess.Popen([xtools['gcc'],"-v"], stderr=subprocess.PIPE)
+                p2 = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
+                p1.stderr.close()
+
+                version = p2.communicate()[0].rstrip('\n')
+                m = re.match("(\w+) (\w+) ([\w\.]+) (.+)", version)
+
+                xtools['vendor'] = m.group(4)
+                xtools['gcc'] = [xtools['gcc'], version, m.group(3)]
+            except:
+                xtools['gcc'] =[None, None, None]
+
+
+            try:
+                p1 = subprocess.Popen([xtools['binutil'], "-v"], stdout=subprocess.PIPE)
+                p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
+                p1.stdout.close()
+
+                version = p2.communicate()[0].rstrip('\n')
+                m = re.match("(.+) (.+)$", version)
+
+                xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
+            except:
+                xtools['binutil'] =[None, None, None]
+
+
+            try:
+                p1 = subprocess.Popen([xtools['gdb'], "-v"], stdout=subprocess.PIPE)
+                p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
+                p1.stdout.close()
+
+                version = p2.communicate()[0].rstrip('\n')
+                m = re.match("(.+) (.+)$", version)
+
+                xtools['gdb'] =[xtools['gdb'], version, m.group(2)]
+            except:
+                xtools['gdb'] =[None, None, None]
+
+            xtools_list.append(xtools)
+
+    return xtools_list
+
+
+def get_choice():
+    while True :
         try:
-            xtools = find_tool(bindir)
-            xtools['path'] = item
-        except:
-            print 'ignore : ' + bindir
-            continue
-            
-        try:
-            p1 = subprocess.Popen([xtools['gcc'],"-v"], stderr=subprocess.PIPE)
-            p2 = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
-            p1.stderr.close()
+            choice = raw_input("Choice [q for quit] : ")
+            if choice == 'q':
+                exit(0)
+            elif int(choice) < len(xtools_list):
+                pass
+            break
 
-            version = p2.communicate()[0].rstrip('\n')
-            m = re.match("(\w+) (\w+) ([\w\.]+) (.+)", version)
-
-            xtools['vendor'] = m.group(4)
-            xtools['gcc'] = [xtools['gcc'], version, m.group(3)]
-        except:
-            xtools['gcc'] =[None, None, None]
-
-
-        try:
-            p1 = subprocess.Popen([xtools['binutil'], "-v"], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
-            p1.stdout.close()
-
-            version = p2.communicate()[0].rstrip('\n')
-            m = re.match("(.+) (.+)$", version)
-
-            xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
-        except:
-            xtools['binutil'] =[None, None, None]
-
-
-        try:
-            p1 = subprocess.Popen([xtools['gdb'], "-v"], stdout=subprocess.PIPE)
-            p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
-            p1.stdout.close()
-
-            version = p2.communicate()[0].rstrip('\n')
-            m = re.match("(.+) (.+)$", version)
-
-            xtools['gdb'] =[xtools['gdb'], version, m.group(2)]
-        except:
-            xtools['gdb'] =[None, None, None]
-
-        xtools_list.append(xtools)
-
-
-print "%-3s%-30s%-40s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
-for idx in range(len(xtools_list)):
-    print "%-3s%-30s%-40s%-15s%-20s%-15s" % (idx + 1, xtools_list[idx]['prefix'], 
-                                                      xtools_list[idx]['vendor'], 
-                                                      xtools_list[idx]['gcc'][2], 
-                                                      xtools_list[idx]['binutil'][2], 
-                                                      xtools_list[idx]['gdb'][2])
-
-while True :
-    try:
-        choice = raw_input("Choice [q for quit] : ")
-        if choice == 'q':
-            exit(0)
-        elif int(choice) < len(xtools_list):
+        except ValueError:
             pass
-        break
 
-    except ValueError:
+parser = optparse.OptionParser()
+parser.add_option("-l", "--list", 
+                    action="store_true", dest="listall", default=False,
+                    help="List available toolchain version")
+parser.add_option("-d", "--dry", 
+                    action="store_true", dest="dryrun", default=False,
+                    help="Don't take an effect")
+parser.add_option("-c", "--current", 
+                    action="store_true", dest="current", default=False,
+                    help="Look up current tool version")
+parser.add_option("-o", "--override", 
+                    action="store_true", dest="override", default=False,
+                    help="Override global config for each new shell")
+parser.add_option("-t", "--tmp", 
+                    action="store_false", dest="override",
+                    help="Write path to tempory file, specified by config. If the file doesn't exist, generate it")
+
+(options, args) = parser.parse_args()
+
+if options.listall:
+    xtools_list = search_tool()
+    show_avalable_tool(xtools_list)
+elif options.current:
+    pass
+elif options.dryrun or options.override:
+    xtools_list = search_tool()
+    show_avalable_tool(xtools_list)
+    choice = get_choice()
+    if options.override:
         pass
+    else:
+        pass
+else:
+    parser.print_help()
+
+
 
    
