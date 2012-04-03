@@ -41,31 +41,31 @@ select_list = []
 
 while search_list :
     for item in search_list :
-    	new_list += [item + "/" + path for path in os.listdir(item)]
+        new_list += [item + "/" + path for path in os.listdir(item)]
 
     del search_list[:]
 
     for item in new_list :
-    	m = re.match(".*/arm-.*-.*-?", item);
-	d = os.path.isdir(item)
-	if not m and d:
-	    search_list.append(item)
-	elif d:
-	    select_list.append(item)
+        m = re.match(".*/arm-.*-.*-?", item);
+        d = os.path.isdir(item)
+        if not m and d:
+            search_list.append(item)
+        elif d:
+            select_list.append(item)
 
     del new_list[:]
-
+    
 xtools = dict()
 xtools_list = [] 
 for item in select_list:
     bindir = item + "/bin"
     if os.path.exists(bindir):
-    	try:
+        try:
             prefix, xtools = find_tool(bindir)
-	    xtools['path'] = item
-	    xtools['prefix'] = prefix
-	except:
-	    print 'ignore : ' + bindir
+            xtools['path'] = item
+            xtools['prefix'] = prefix
+        except:
+            print 'ignore : ' + bindir
             continue
             
         try:
@@ -79,33 +79,33 @@ for item in select_list:
             xtools['vendor'] = m.group(4)
             xtools['gcc'] = [xtools['gcc'], version, m.group(3)]
         except:
-	    xtools['gcc'] =[None, None, None]
+            xtools['gcc'] =[None, None, None]
 
 
         try:
-	    p1 = subprocess.Popen([xtools['binutil'], "-v"], stdout=subprocess.PIPE)
-	    p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
-	    p1.stdout.close()
+            p1 = subprocess.Popen([xtools['binutil'], "-v"], stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
+            p1.stdout.close()
 
             version = p2.communicate()[0].rstrip('\n')
             m = re.match("(.+) (.+)$", version)
 
-	    xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
+            xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
         except:
-	    xtools['binutil'] =[None, None, None]
+            xtools['binutil'] =[None, None, None]
 
 
         try:
-	    p1 = subprocess.Popen([xtools['gdb'], "-v"], stdout=subprocess.PIPE)
-	    p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
-	    p1.stdout.close()
+            p1 = subprocess.Popen([xtools['gdb'], "-v"], stdout=subprocess.PIPE)
+            p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
+            p1.stdout.close()
 
             version = p2.communicate()[0].rstrip('\n')
             m = re.match("(.+) (.+)$", version)
 
-	    xtools['gdb'] =[xtools['gdb'], version, m.group(2)]
+            xtools['gdb'] =[xtools['gdb'], version, m.group(2)]
         except:
-	    xtools['gdb'] =[None, None, None]
+            xtools['gdb'] =[None, None, None]
 
         xtools_list.append(xtools)
 
@@ -124,8 +124,9 @@ while True :
         if choice == 'q':
             exit(0)
         elif int(choice) < len(xtools_list):
-	    pass
-	break
+            pass
+        break
+
     except ValueError:
         pass
 
