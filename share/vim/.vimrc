@@ -1,6 +1,7 @@
 ":""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set nocompatible
 " Sets how many lines of history VIM has to remember
 set history=700
 
@@ -90,6 +91,7 @@ set expandtab
 set shiftwidth=4
 set tabstop=4
 set smarttab
+set copyindent
 
 set lbr    "linebreak
 set tw=500 "textwidth
@@ -166,12 +168,37 @@ function! TooglePaste()
     endif
 endfunction
 
-set nocompatible
 
+set guioptions-=e
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs and buffers
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if exists("+showtabline")
+     function! MyTabLine()
+         let s = ''
+         let t = tabpagenr()
+         let i = 1
+         while i <= tabpagenr('$')
+             let buflist = tabpagebuflist(i)
+             let winnr = tabpagewinnr(i)
+             let s .= (i != 1 ? '%#TabLine# | ' : '')
+             let s .= i
+             let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+             let s .= ' '
+             let file = substitute(simplify(bufname(buflist[winnr - 1])), $HOME, '~', '')
+             if file == ''
+                 let file = '[No Name]'
+             endif
+             let s .= (getbufvar(buflist[winnr - 1], "&mod") ? '*' : '')
+             let s .= file
+             let s .= ' '
+             let i = i + 1
+         endwhile
+         let s .= '%T%#TabLineFill#%='
+         return s
+     endfunction
+
+     set stal=2
+     set tabline=%!MyTabLine()
+endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -213,3 +240,14 @@ if exists("syntax_on")
   hi Title        term=bold      ctermfg=LightMagenta gui=bold    guifg=Pink
   hi WarningMsg   term=standout  ctermfg=LightRed   guifg=Red
   hi Visual       term=reverse   cterm=reverse      gui=NONE      guifg=white guibg=darkgreen
+
+  " For tabline
+  hi TabLine           cterm=underline ctermfg=15    ctermbg=242   gui=underline guibg=#6c6c6c guifg=White
+  hi TabLineSel        cterm=bold      gui=NONE      guifg=White
+  hi TabLineNr         cterm=underline ctermbg=238   guibg=#444444
+  hi TabLineNrSel      cterm=bold      ctermfg=45    guifg=#00d7ff
+  hi TabLineFill       cterm=reverse   gui=reverse
+  hi TabLineMore       cterm=underline ctermfg=White ctermbg=236   gui=underline guifg=White   guibg=#303030
+  hi TabLineSplitNr    cterm=underline ctermfg=148 ctermbg=240   gui=underline,italic guifg=#afd700   guibg=#6c6c6c
+  hi TabLineSplitNrSel cterm=NONE      ctermfg=148 ctermbg=236   gui=NONE,italic      guifg=#afd700   guibg=#303030
+
