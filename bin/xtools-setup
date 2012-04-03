@@ -19,12 +19,12 @@ def find_tool(path):
                     ret[pattern[item]] = os.path.join(root, filename)
                     if not prefix:
                         m = re.match('(arm-.*-.*)-(\w*)', filename)
-                        prefix = m.group(1)
+                        ret['prefix'] = m.group(1)
 
     if not ret:
         raise Exception('File not found')
     else:
-        return prefix, ret
+        return ret
 
 home = os.getenv('HOME')
 toolpath = os.getenv('TOOLBOX', home + "/tool");
@@ -61,9 +61,8 @@ for item in select_list:
     bindir = item + "/bin"
     if os.path.exists(bindir):
         try:
-            prefix, xtools = find_tool(bindir)
+            xtools = find_tool(bindir)
             xtools['path'] = item
-            xtools['prefix'] = prefix
         except:
             print 'ignore : ' + bindir
             continue
