@@ -4,9 +4,9 @@ import os
 import ConfigParser
 
 def usage():
-    print "%s catagory.field" % sys.argv[0]
+    print "%s catagory.field [filename]" % sys.argv[0]
 
-if len(sys.argv) != 2:
+if len(sys.argv) < 2 and len(sys.argv) > 4:
     usage()
     exit(0)
 
@@ -15,7 +15,9 @@ if not catagory or not field:
     usage()
     exit(1)
 
-config = os.getenv('HOME') + "/.tool/config"
+if len(sys.argv) == 2:
+    config = os.getenv('HOME') + "/." + os.getenv('USER') + "-tool/config"
+
 if os.path.exists(config):
     content = ConfigParser.SafeConfigParser()
     try:
