@@ -90,8 +90,7 @@ set noswapfile
 set expandtab
 set shiftwidth=4
 set tabstop=4
-"set smarttab
-set copyindent
+set smarttab
 
 set lbr    "linebreak
 set tw=500 "textwidth
