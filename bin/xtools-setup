@@ -4,6 +4,7 @@ import sys
 import re
 import subprocess
 import optparse 
+import ConfigParser
 
 
 def find_tool(path):
@@ -128,13 +129,48 @@ def get_choice():
         try:
             choice = raw_input("Choice [q for quit] : ")
             if choice == 'q':
-                exit(0)
-            elif int(choice) < len(xtools_list):
+                choice = 0
+                break
+            elif choice.isalnum() and 1 <= int(choice) <= len(xtools_list):
+                break
+            else:
                 pass
-            break
 
         except ValueError:
             pass
+
+    return int(choice)
+
+def access_config(writedata, option, value):
+    config = os.getenv('HOME') + "/." + os.getenv('USER') + "-tool/config"
+    catagory, field = option.split('.')
+
+    if not os.path.exists(config):
+        print "config directory (%s) doesn't exist" % config
+        return 1 
+
+    content = ConfigParser.SafeConfigParser()
+    try:
+        content.read(config)
+    except:
+        print "parse %s config error" % config
+        return 2
+
+    if not content.has_section(catagory):
+        print "config file doesn't have '%s' section" % catagory
+        return 3
+
+    if writedata:
+        content.set(catagory, field, value)
+        fp = open(config, "w")
+        content.write(fp)
+    else:
+        val = content.get(catagory, field)
+        if not val:
+            print "config file doesn't have '%s' field in '%s' section" % (field, catagory)
+            return 4
+
+    return 0
 
 parser = optparse.OptionParser()
 parser.add_option("-l", "--list", 
@@ -164,10 +200,14 @@ elif options.dryrun or options.override:
     xtools_list = search_tool()
     show_avalable_tool(xtools_list)
     choice = get_choice()
-    if options.override:
-        pass
-    else:
-        pass
+
+    if choice:
+        choice = int(choice) - 1
+        if options.override:
+            access_config(True, "xtools.toolpath", xtools_list[choice]['path'])
+            print "Overrite success"
+        else:
+            print "Tempory write  success"
 else:
     parser.print_help()
 
