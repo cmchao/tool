@@ -31,12 +31,12 @@ def find_tool(path):
 
 def show_avalable_tool(xtools_list):
     print "%-3s%-30s%-40s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
-    for idx in xrange(len(xtools_list)):
-        print "%-3s%-30s%-40s%-15s%-20s%-15s" % (idx + 1, xtools_list[idx]['prefix'], 
-                                                          xtools_list[idx]['vendor'], 
-                                                          xtools_list[idx]['gcc'][2], 
-                                                          xtools_list[idx]['binutil'][2], 
-                                                          xtools_list[idx]['gdb'][2])
+    for idx, item in enumerate(xtools_list):
+        print "%-3s%-30s%-40s%-15s%-20s%-15s" % (idx + 1, item['prefix'], 
+                                                          item['vendor'], 
+                                                          item['gcc'][2], 
+                                                          item['binutil'][2], 
+                                                          item['gdb'][2])
 
 
 def search_tool(lookup_path = None):
