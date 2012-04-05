@@ -146,9 +146,13 @@ def get_choice():
 
     return int(choice)
 
-def access_config(writedata, option, value):
+def access_config(writedata, option, value = None):
     config = os.getenv('HOME') + "/." + os.getenv('USER') + "-tool/config"
     catagory, field = option.split('.')
+
+    if writedata and value == None:
+        print "Invalid value for write"
+        return None
 
     if not os.path.exists(config):
         print "config directory (%s) doesn't exist" % config
@@ -201,7 +205,9 @@ if options.listall:
     xtools_list = search_tool()
     show_avalable_tool(xtools_list)
 elif options.current:
-    pass
+    ret = access_config(False, "xtools.toolpath")
+    xtools_list = search_tool(ret)
+    show_avalable_tool(xtools_list)
 elif options.dryrun or options.override:
     xtools_list = search_tool()
     show_avalable_tool(xtools_list)
