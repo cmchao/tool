@@ -208,20 +208,21 @@ elif options.current:
     ret = access_config(False, "xtools.toolpath")
     xtools_list = search_tool(ret)
     show_avalable_tool(xtools_list)
-elif options.dryrun or options.override:
+elif options.dryrun or options.override or not options.override:
     xtools_list = search_tool()
     show_avalable_tool(xtools_list)
     choice = get_choice()
 
     if choice:
         choice = int(choice) - 1
-        if options.override:
+        if options.dryrun:
+            print "just try run"
+        elif options.override:
             ret = access_config(True, "xtools.toolpath", xtools_list[choice]['path'])
             if ret == xtools_list[choice]['path']:
                 print "Overrite success"
             else:
                 print "Overrite fail"
-
         else:
             print "Tempory write  success"
 else:
