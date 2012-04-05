@@ -5,6 +5,7 @@ import re
 import subprocess
 import optparse 
 import ConfigParser
+import tempfile
 
 
 def find_tool(path):
@@ -224,6 +225,17 @@ elif options.dryrun or options.override or not options.override:
             else:
                 print "Overrite fail"
         else:
+            tmppath = access_config(False, "xtools.tmp")
+            if not tmppath or not os.path.exists(tmppath):
+                tmpfp, tmppath = tempfile.mkstemp();
+                tmpfp = os.fdopen(tmpfp, "w")
+            else:
+                tmpfp = open(tmppath, "w")
+                tmpfp.seek(0, 2)
+
+            tmpfp.write(xtools_list[choice]['path'] + "\n")
+            access_config(True, "xtools.tmp", tmppath)
+            tmpfp.close()
             print "Tempory write  success"
 else:
     parser.print_help()
