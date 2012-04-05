@@ -1,5 +1,3 @@
-source ~/.git-completion.bash
-
 # add your local .bashrc customization here #shell setting 
 function jobcount {
    jobs | wc -l | tr -d " "
@@ -10,8 +8,17 @@ function mc {
 }
 
 function setup-xtools-env {
-    xtoolpath=`/tmp/config-query 'xtools.toolpath'`
+    xtoolpath=`config-query 'xtools.toolpath'`
     if [ $? -eq 0 ]; then
+        export ARM_TOOLPATH="${xtoolpath}"
+    fi
+}
+
+function setup-xtools {
+    xtools-setup -t
+    xtoolpath=`config-query 'xtools.tmp'`
+    if [ $? -eq 0 ]; then
+        xtoolpath=`head -1 ${xtoolpath}`
         export ARM_TOOLPATH="${xtoolpath}"
     fi
 }
