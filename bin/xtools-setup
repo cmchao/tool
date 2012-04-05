@@ -152,30 +152,31 @@ def access_config(writedata, option, value):
 
     if not os.path.exists(config):
         print "config directory (%s) doesn't exist" % config
-        return 1 
+        return None
 
     content = ConfigParser.SafeConfigParser()
     try:
         content.read(config)
     except:
         print "parse %s config error" % config
-        return 2
+        return None
 
     if not content.has_section(catagory):
         print "config file doesn't have '%s' section" % catagory
-        return 3
+        return None
 
     if writedata:
         content.set(catagory, field, value)
         fp = open(config, "w")
         content.write(fp)
+        return value
     else:
         val = content.get(catagory, field)
         if not val:
             print "config file doesn't have '%s' field in '%s' section" % (field, catagory)
-            return 4
-
-    return 0
+            return None
+        return val
+    return None
 
 parser = optparse.OptionParser()
 parser.add_option("-l", "--list", 
@@ -209,8 +210,12 @@ elif options.dryrun or options.override:
     if choice:
         choice = int(choice) - 1
         if options.override:
-            access_config(True, "xtools.toolpath", xtools_list[choice]['path'])
-            print "Overrite success"
+            ret = access_config(True, "xtools.toolpath", xtools_list[choice]['path'])
+            if ret == xtools_list[choice]['path']:
+                print "Overrite success"
+            else:
+                print "Overrite fail"
+
         else:
             print "Tempory write  success"
 else:
