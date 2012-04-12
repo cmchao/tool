@@ -30,9 +30,17 @@ def find_tool(path):
         return ret
 
 def show_avalable_tool(xtools_list):
-    print "%-3s%-28s%-80s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
+    prefix_len  = max([ len(item['prefix'])     for item in xtools_list ])
+    vendor_len  = max([ len(item['vendor'])     for item in xtools_list ])
+    gcc_len     = max([ len(item['gcc'][2])     for item in xtools_list if item['gcc'][2] ] )
+    binutil_len = max([ len(item['binutil'][2]) for item in xtools_list if item['binutil'][2] ] )
+    gdb_len     = max([ len(item['gdb'][2])     for item in xtools_list if item['gdb'][2] ] )
+
+    cell_format = "%%-3s%%-%ds%%-%ds%%-%ds%%-%ds%%-%ds" % (prefix_len + 1, vendor_len + 1, gcc_len + 1, binutil_len + 1, gdb_len + 1)
+
+    print cell_format % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
     for idx, item in enumerate(xtools_list):
-        print "%-3s%-28s%-80s%-15s%-20s%-15s" % (idx + 1, item['prefix'], 
+        print cell_format % (idx + 1, item['prefix'], 
                                                           item['vendor'], 
                                                           item['gcc'][2], 
                                                           item['binutil'][2], 
