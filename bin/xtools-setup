@@ -30,9 +30,9 @@ def find_tool(path):
         return ret
 
 def show_avalable_tool(xtools_list):
-    print "%-3s%-30s%-40s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
+    print "%-3s%-28s%-80s%-15s%-20s%-15s" % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
     for idx, item in enumerate(xtools_list):
-        print "%-3s%-30s%-40s%-15s%-20s%-15s" % (idx + 1, item['prefix'], 
+        print "%-3s%-28s%-80s%-15s%-20s%-15s" % (idx + 1, item['prefix'], 
                                                           item['vendor'], 
                                                           item['gcc'][2], 
                                                           item['binutil'][2], 
@@ -62,12 +62,10 @@ def search_tool(lookup_path = None):
             del search_list[:]
 
             for item in new_list :
-                m = re.match(".*/arm-.*-.*-?", item);
-                d = os.path.isdir(item)
-                if not m and d:
-                    search_list.append(item)
-                elif d:
+                if os.path.isdir(item + "/bin"):
                     select_list.append(item)
+                else:
+                    search_list.append(item)
 
             del new_list[:]
     else:
