@@ -178,9 +178,9 @@ if exists("+showtabline")
          while i <= tabpagenr('$')
              let buflist = tabpagebuflist(i)
              let winnr = tabpagewinnr(i)
-             let s .= (i != 1 ? '%#TabLine# | ' : '')
-             let s .= i
+             let s .= (i != 1 ? ' |%#TabLine#' : '')
              let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+             let s .= i
              let s .= ' '
              let file = substitute(simplify(bufname(buflist[winnr - 1])), $HOME, '~', '')
              if file == ''
