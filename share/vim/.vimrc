@@ -109,7 +109,7 @@ noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 nmap M :%s///g
 
 let hexmode = 0
-map <leader>x  :%!xxd<cr>
+map <leader>x  :%!xxd <cr>
 map <leader>nx :%!xxd -r<cr>
 map <leader>p  :call TooglePaste()<cr>
 
