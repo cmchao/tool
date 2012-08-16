@@ -8,6 +8,7 @@ set history=700
 " Enable filetype plugin
 filetype plugin on
 filetype indent on
+au BufNewFile,BufRead *.dml set filetype=dml
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -20,6 +21,11 @@ let g:mapleader = ","
 " Fast saving and quiting
 nmap <leader>w :w!<cr>
 nmap <leader>qa :qa!<cr>
+
+" small trick
+nmap <leader>s  :%s/\s\+$//<cr>
+nmap <leader>m  :%s///<cr>
+nmap <leader>d  :diffu<cr>
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc
