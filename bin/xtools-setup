@@ -58,29 +58,47 @@ def find_xtool_info(xtool):
 
     #gcc
     try:
-        xtool['vendor'] = None
-        xtool['gcc']['version'] = None
-        xtool['gcc']['abi'] = None
-        xtool['gcc']['cpu'] = None
-        xtool['gcc']['fpu'] = None
+        xtool['vendor'] = "None"
+        xtool['gcc']['version'] = "None"
+        xtool['gcc']['abi'] = "None"
+        xtool['gcc']['cpu'] = "None"
+        xtool['gcc']['fpu'] = "None"
 
         p1 = subprocess.Popen([xtool['gcc']['path'],"-v"], stderr=subprocess.PIPE)
-        p2 = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
-        p1.stderr.close()
+        info = p1.communicate()[1].rstrip('\n').split('\n')
 
-        version = p2.communicate()[0].rstrip('\n')
+        version_info = info[-1]
+        for line in info:
+            if line.find("--build") > 0:
+                build_info = line
+                break
 
-        m = re.match("(\w+) (\w+) ([\w\.]+) (.+)", version)
-        xtool['vendor'] = m.group(4)
-        xtool['gcc']['version'] = m.group(3)
-        
+        m = re.match("gcc version ([\w\.]+) (.+)", version_info)
+        xtool['vendor'] = m.group(2)
+        xtool['gcc']['version'] = m.group(1)
+
+        m = re.match(".+ --with-float=(\w+)", build_info)
+        if m:
+            xtool['gcc']['abi'] = m.group(1)
+
+        m = re.match(".+ --with-cpu=(\w+)", build_info)
+        if m:
+            xtool['gcc']['cpu'] = m.group(1)
+
+        m = re.match(".+ --with-fpu=(\w+)", build_info)
+        if m:
+            xtool['gcc']['fpu'] = m.group(1)
+            
+        print xtool['gcc']
+        sys.exit(0)
+
     except:
         pass
 
 
     #binutil
     try:
-        xtool['binutil']['version'] = None
+        xtool['binutil']['version'] = "None"
 
         p1 = subprocess.Popen([xtool['binutil']['path'], "-v"], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
@@ -96,7 +114,7 @@ def find_xtool_info(xtool):
 
     #gdb
     try:
-        xtool['gdb']['version'] = None
+        xtool['gdb']['version'] = "None"
 
         p1 = subprocess.Popen([xtool['gdb']['path'], "-v"], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
