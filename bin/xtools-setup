@@ -189,6 +189,9 @@ def access_config(writedata, option, value = None):
         return val
     return None
 
+#
+# main starat
+#
 parser = optparse.OptionParser()
 parser.add_option("-l", "--list", 
                     action="store_true", dest="listall", default=False,
@@ -204,7 +207,8 @@ parser.add_option("-o", "--override",
                     help="Override global config for each new shell")
 parser.add_option("-t", "--tmp", 
                     action="store_false", dest="override",
-                    help="Write path to tempory file, specified by config. If the file doesn't exist, generate it")
+                    help="Write path to tempory file, specified by config. "
+                         "If the file doesn't exist, generate it")
 
 (options, args) = parser.parse_args()
 
