@@ -138,15 +138,21 @@ def show_avalable_tool(xtools):
     binutil_len = max([ len(item['binutil']['version']) for item in xtools.values() ])
     gdb_len     = max([ len(item['gdb']['version'])     for item in xtools.values() ])
 
-    cell_format = "%%-3s%%-%ds%%-%ds%%-%ds" % (
+    cell_format = "%%s%%-3s%%-%ds%%-%ds%%-%ds" % (
                             prefix_len + 1, 
                             gcc_len + 1, 
                             abi_len + 1)
 
-    print cell_format % ("", 'Target', 'gcc', "abi")
+    print cell_format % ("", "", 'Target', 'gcc', "abi")
     idx = 1 
     for item in xtools.values():
-        print cell_format % (idx, item['target'], 
+        if item['current']: 
+            cur_mark = "*"
+        else:
+            cur_mark = " "
+
+        print cell_format % (cur_mark, idx, 
+                                  item['target'], 
                                   item['gcc']['version'],
                                   item['gcc']['abi'])
         idx += 1
@@ -159,7 +165,7 @@ def search_xtool(lookup_path = None):
 
     if not lookup_path:
         home = os.getenv('HOME')
-        toolpath = os.getenv('TOOLBOX', home + "/tool");
+        toolpath = os.getenv('TOOLBOX', home + "/tool")
         if not toolpath :
             print "can't get home directory"
             exit(1)
@@ -167,6 +173,7 @@ def search_xtool(lookup_path = None):
         xtoolpath = toolpath + "/x-tools"
 
         select_list = find_xtool_dir(xtoolpath)
+            
     else:
         if os.path.isdir(lookup_path):
             select_list = [lookup_path, ]
@@ -181,6 +188,14 @@ def search_xtool(lookup_path = None):
 
         find_xtool_info(xtools[item])
         
+    # find and setup current xtool path
+    cur_path = os.getenv('ARM_TOOLPATH')
+    for item in xtools.keys():
+        if cur_path and cur_path == item:
+            xtools[item]['current'] = True
+        else:
+            xtools[item]['current'] = False
+            
     return xtools
 
 
