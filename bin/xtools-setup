@@ -131,25 +131,24 @@ def find_xtool_info(xtool):
 def show_avalable_tool(xtools):
     prefix_len  = max([ len(item['target'])             for item in xtools.values() ])
     vendor_len  = max([ len(item['vendor'])             for item in xtools.values() ])
-    gcc_len     = max([ len(item['gcc']['version'])     for item in xtools.values() ] )
-    binutil_len = max([ len(item['binutil']['version']) for item in xtools.values() ] )
-    gdb_len     = max([ len(item['gdb']['version'])     for item in xtools.values() ] )
+    gcc_len     = max([ len(item['gcc']['version'])     for item in xtools.values() ])
+    abi_len     = max([ len(item['gcc']['abi'])         for item in xtools.values() ])
+    cpu_len     = max([ len(item['gcc']['cpu'])         for item in xtools.values() ])
+    fpu_len     = max([ len(item['gcc']['fpu'])         for item in xtools.values() ])
+    binutil_len = max([ len(item['binutil']['version']) for item in xtools.values() ])
+    gdb_len     = max([ len(item['gdb']['version'])     for item in xtools.values() ])
 
-    cell_format = "%%-3s%%-%ds%%-%ds%%-%ds%%-%ds%%-%ds" % (
+    cell_format = "%%-3s%%-%ds%%-%ds%%-%ds" % (
                             prefix_len + 1, 
-                            vendor_len + 1, 
                             gcc_len + 1, 
-                            binutil_len + 1, 
-                            gdb_len + 1)
+                            abi_len + 1)
 
-    print cell_format % ("", 'Target', 'Vendor', 'gcc', 'binutils', 'gdb')
+    print cell_format % ("", 'Target', 'gcc', "abi")
     idx = 1 
     for item in xtools.values():
         print cell_format % (idx, item['target'], 
-                                  item['vendor'], 
-                                  item['gcc']['version'], 
-                                  item['binutil']['version'], 
-                                  item['gdb']['version'])
+                                  item['gcc']['version'],
+                                  item['gcc']['abi'])
         idx += 1
 
 
