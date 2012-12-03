@@ -30,26 +30,85 @@ def find_xtool_dir(path):
 
     return select_list
 
-def find_tool(path):
+def find_xtool_bin(path):
+    """ find target name, gcc/gdb/readelf path for specific xtool dir """
+
     pattern = {"^arm-.*-gcc$" : 'gcc',
                "^arm-.*-gdb$" : 'gdb',
                "^arm-.*-readelf$" : 'binutil'}
     ret = dict()
     prefix = ""
 
-    for root, dirs, names in os.walk(path):
+    for root, dirs, names in os.walk(path + "/bin"):
         for filename in names:
             for item in pattern.keys():
                 if re.match(item, filename):
-                    ret[pattern[item]] = os.path.join(root, filename)
+                    ret[pattern[item]] = {"path" : os.path.join(root, filename)}
                     if not prefix:
                         m = re.match('(arm-.*-.*)-(\w*)', filename)
-                        ret['prefix'] = m.group(1)
+                        ret['target'] = m.group(1)
 
     if not ret:
         raise Exception('File not found')
     else:
         return ret
+
+def find_xtool_info(xtool):
+    """ find gcc/gdb/binutil verision information """
+
+    #gcc
+    try:
+        xtool['vendor'] = None
+        xtool['gcc']['version'] = None
+        xtool['gcc']['abi'] = None
+        xtool['gcc']['cpu'] = None
+        xtool['gcc']['fpu'] = None
+
+        p1 = subprocess.Popen([xtool['gcc']['path'],"-v"], stderr=subprocess.PIPE)
+        p2 = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
+        p1.stderr.close()
+
+        version = p2.communicate()[0].rstrip('\n')
+
+        m = re.match("(\w+) (\w+) ([\w\.]+) (.+)", version)
+        xtool['vendor'] = m.group(4)
+        xtool['gcc']['version'] = m.group(3)
+        
+    except:
+        pass
+
+
+    #binutil
+    try:
+        xtool['binutil']['version'] = None
+
+        p1 = subprocess.Popen([xtool['binutil']['path'], "-v"], stdout=subprocess.PIPE)
+        p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
+        p1.stdout.close()
+
+        version = p2.communicate()[0].rstrip('\n')
+        m = re.match("(.+) (.+)$", version)
+
+        xtool['binutil']['version'] = m.group(2)
+    except:
+        pass
+
+
+    #gdb
+    try:
+        xtool['gdb']['version'] = None
+
+        p1 = subprocess.Popen([xtool['gdb']['path'], "-v"], stdout=subprocess.PIPE)
+        p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
+        p1.stdout.close()
+
+        version = p2.communicate()[0].rstrip('\n')
+        m = re.match("(.+) (.+)$", version)
+
+        xtool['gdb']['version'] = m.group(2)
+    except:
+        pass
+
 
 def show_avalable_tool(xtools_list):
     prefix_len  = max([ len(item['prefix'])     for item in xtools_list ])
@@ -69,7 +128,11 @@ def show_avalable_tool(xtools_list):
                                                           item['gdb'][2])
 
 
-def search_tool(lookup_path = None):
+def search_xtool(lookup_path = None):
+    """ find possible xtool in specific dir and get each information for
+        gcc/gdb/binutils
+    """
+
     if not lookup_path:
         home = os.getenv('HOME')
         toolpath = os.getenv('TOOLBOX', home + "/tool");
@@ -83,61 +146,18 @@ def search_tool(lookup_path = None):
     else:
         if os.path.isdir(lookup_path):
             select_list = [lookup_path, ]
-        
+
     xtools = dict()
-    xtools_list = [] 
     for item in select_list:
-        bindir = item + "/bin"
-        if os.path.exists(bindir):
-            try:
-                xtools = find_tool(bindir)
-                xtools['path'] = item
-            except:
-                print 'ignore : ' + bindir
-                continue
-                
-            try:
-                p1 = subprocess.Popen([xtools['gcc'],"-v"], stderr=subprocess.PIPE)
-                p2 = subprocess.Popen(["tail", "-1"], stdin = p1.stderr, stdout=subprocess.PIPE)
-                p1.stderr.close()
+        try:
+            xtools[item] = find_xtool_bin(item)
+        except:
+            print 'ignore : ' + item
+            continue
 
-                version = p2.communicate()[0].rstrip('\n')
-                m = re.match("(\w+) (\w+) ([\w\.]+) (.+)", version)
-
-                xtools['vendor'] = m.group(4)
-                xtools['gcc'] = [xtools['gcc'], version, m.group(3)]
-            except:
-                xtools['gcc'] =[None, None, None]
-
-
-            try:
-                p1 = subprocess.Popen([xtools['binutil'], "-v"], stdout=subprocess.PIPE)
-                p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
-                p1.stdout.close()
-
-                version = p2.communicate()[0].rstrip('\n')
-                m = re.match("(.+) (.+)$", version)
-
-                xtools['binutil'] = [xtools['binutil'], version, m.group(2)]
-            except:
-                xtools['binutil'] =[None, None, None]
-
-
-            try:
-                p1 = subprocess.Popen([xtools['gdb'], "-v"], stdout=subprocess.PIPE)
-                p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
-                p1.stdout.close()
-
-                version = p2.communicate()[0].rstrip('\n')
-                m = re.match("(.+) (.+)$", version)
-
-                xtools['gdb'] =[xtools['gdb'], version, m.group(2)]
-            except:
-                xtools['gdb'] =[None, None, None]
-
-            xtools_list.append(xtools)
-
-    return xtools_list
+        find_xtool_info(xtools[item])
+        
+    return xtools
 
 
 def get_choice():
@@ -217,14 +237,14 @@ parser.add_option("-t", "--tmp",
 (options, args) = parser.parse_args()
 
 if options.listall:
-    xtools_list = search_tool()
+    xtools_list = search_xtool()
     show_avalable_tool(xtools_list)
 elif options.current:
     ret = access_config(False, "xtools.toolpath")
-    xtools_list = search_tool(ret)
+    xtools_list = search_xtool(ret)
     show_avalable_tool(xtools_list)
 elif options.dryrun or options.override or not options.override:
-    xtools_list = search_tool()
+    xtools_list = search_xtool()
     show_avalable_tool(xtools_list)
     choice = get_choice()
 
