@@ -89,9 +89,6 @@ def find_xtool_info(xtool):
         if m:
             xtool['gcc']['fpu'] = m.group(1)
             
-        print xtool['gcc']
-        sys.exit(0)
-
     except:
         pass
 
@@ -114,6 +111,9 @@ def find_xtool_info(xtool):
 
     #gdb
     try:
+        if not 'gdb' in xtool:
+            xtool['gdb'] = dict()
+
         xtool['gdb']['version'] = "None"
 
         p1 = subprocess.Popen([xtool['gdb']['path'], "-v"], stdout=subprocess.PIPE)
@@ -128,22 +128,29 @@ def find_xtool_info(xtool):
         pass
 
 
-def show_avalable_tool(xtools_list):
-    prefix_len  = max([ len(item['prefix'])     for item in xtools_list ])
-    vendor_len  = max([ len(item['vendor'])     for item in xtools_list ])
-    gcc_len     = max([ len(item['gcc'][2])     for item in xtools_list if item['gcc'][2] ] )
-    binutil_len = max([ len(item['binutil'][2]) for item in xtools_list if item['binutil'][2] ] )
-    gdb_len     = max([ len(item['gdb'][2])     for item in xtools_list if item['gdb'][2] ] )
+def show_avalable_tool(xtools):
+    prefix_len  = max([ len(item['target'])             for item in xtools.values() ])
+    vendor_len  = max([ len(item['vendor'])             for item in xtools.values() ])
+    gcc_len     = max([ len(item['gcc']['version'])     for item in xtools.values() ] )
+    binutil_len = max([ len(item['binutil']['version']) for item in xtools.values() ] )
+    gdb_len     = max([ len(item['gdb']['version'])     for item in xtools.values() ] )
 
-    cell_format = "%%-3s%%-%ds%%-%ds%%-%ds%%-%ds%%-%ds" % (prefix_len + 1, vendor_len + 1, gcc_len + 1, binutil_len + 1, gdb_len + 1)
+    cell_format = "%%-3s%%-%ds%%-%ds%%-%ds%%-%ds%%-%ds" % (
+                            prefix_len + 1, 
+                            vendor_len + 1, 
+                            gcc_len + 1, 
+                            binutil_len + 1, 
+                            gdb_len + 1)
 
-    print cell_format % ("", 'Platform', 'Vendor', 'gcc', 'binutils', 'gdb')
-    for idx, item in enumerate(xtools_list):
-        print cell_format % (idx + 1, item['prefix'], 
-                                                          item['vendor'], 
-                                                          item['gcc'][2], 
-                                                          item['binutil'][2], 
-                                                          item['gdb'][2])
+    print cell_format % ("", 'Target', 'Vendor', 'gcc', 'binutils', 'gdb')
+    idx = 1 
+    for item in xtools.values():
+        print cell_format % (idx, item['target'], 
+                                  item['vendor'], 
+                                  item['gcc']['version'], 
+                                  item['binutil']['version'], 
+                                  item['gdb']['version'])
+        idx += 1
 
 
 def search_xtool(lookup_path = None):
