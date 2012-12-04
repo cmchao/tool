@@ -53,7 +53,7 @@ load-plugins=
 #enable-msg=
 
 # Disable the message(s) with the given id(s).
-#disable-msg=
+disable-msg=C0103
 
 
 [REPORTS]
@@ -63,7 +63,7 @@ load-plugins=
 output-format=text
 
 # Include message's id in output
-include-ids=no
+include-ids=yes
 
 # Put messages in a separate file for each module / package specified on the
 # command line instead of printing them on stdout. Reports (if any) will be
@@ -273,7 +273,7 @@ int-import-graph=
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=80
+max-line-length=95
 
 # Maximum number of lines in a module
 max-module-lines=1000
