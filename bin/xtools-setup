@@ -223,23 +223,19 @@ def access_config(writedata, option, value = None):
     catagory, field = option.split('.')
 
     if writedata and value == None:
-        print "Invalid value for write"
-        return None
+        raise Exception("Invalid value for write")
 
     if not os.path.exists(config):
-        print "config directory (%s) doesn't exist" % config
-        return None
+        raise Exception("config directory (%s) doesn't exist" % config)
 
     content = ConfigParser.SafeConfigParser()
     try:
         content.read(config)
     except:
-        print "parse %s config error" % config
-        return None
+        raise Exception("parse %s config error" % config)
 
     if not content.has_section(catagory):
-        print "config file doesn't have '%s' section" % catagory
-        return None
+        raise Exception("config file doesn't have '%s' section" % catagory)
 
     if writedata:
         content.set(catagory, field, value)
@@ -249,8 +245,7 @@ def access_config(writedata, option, value = None):
     else:
         val = content.get(catagory, field)
         if not val:
-            print "config file doesn't have '%s' field in '%s' section" % (field, catagory)
-            return None
+            raise Exception("config file doesn't have '%s' field in '%s' section" % (field, catagory))  
         return val
     return None
 
