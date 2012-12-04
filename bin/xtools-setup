@@ -128,7 +128,7 @@ def find_xtool_info(xtool):
         pass
 
 
-def show_avalable_tool(xtools):
+def show_xtool_info(xtools):
     prefix_len  = max([ len(item['target'])             for item in xtools.values() ])
     vendor_len  = max([ len(item['vendor'])             for item in xtools.values() ])
     gcc_len     = max([ len(item['gcc']['version'])     for item in xtools.values() ])
@@ -277,14 +277,14 @@ parser.add_option("-t", "--tmp",
 
 if options.listall:
     xtools_list = search_xtool()
-    show_avalable_tool(xtools_list)
+    show_xtool_info(xtools_list)
 elif options.current:
     ret = access_config(False, "xtools.toolpath")
     xtools_list = search_xtool(ret)
-    show_avalable_tool(xtools_list)
+    show_xtool_info(xtools_list)
 elif options.dryrun or options.override or not options.override:
     xtools_list = search_xtool()
-    show_avalable_tool(xtools_list)
+    show_xtool_info(xtools_list)
     choice = get_choice()
 
     if choice:
