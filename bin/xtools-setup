@@ -199,14 +199,16 @@ def search_xtool(lookup_path = None):
     return xtools
 
 
-def get_choice():
+def get_choice(xtools):
+    " Get integer input from prompt. 'q' for leave "
+
     while True :
         try:
             choice = raw_input("Choice [q for quit] : ")
             if choice == 'q':
                 choice = 0
                 break
-            elif choice.isalnum() and 1 <= int(choice) <= len(xtools_list):
+            elif choice.isalnum() and 1 <= int(choice) <= len(xtools):
                 break
             else:
                 pass
@@ -285,7 +287,7 @@ elif options.current:
 elif options.dryrun or options.override or not options.override:
     xtools_list = search_xtool()
     show_xtool_info(xtools_list)
-    choice = get_choice()
+    choice = get_choice(xtools_list)
 
     if choice:
         choice = int(choice) - 1
