@@ -64,7 +64,7 @@ def find_xtool_info(xtool):
         xtool['gcc']['cpu'] = "None"
         xtool['gcc']['fpu'] = "None"
 
-        p1 = subprocess.Popen([xtool['gcc']['path'],"-v"], stderr=subprocess.PIPE)
+        p1 = subprocess.Popen([xtool['gcc']['path'], "-v"], stderr=subprocess.PIPE)
         info = p1.communicate()[1].rstrip('\n').split('\n')
 
         version_info = info[-1]
@@ -303,7 +303,7 @@ elif options.dryrun or options.override or not options.override:
         else:
             tmppath = access_config(False, "xtools.tmp")
             if not tmppath or not os.path.exists(tmppath):
-                tmpfp, tmppath = tempfile.mkstemp();
+                tmpfp, tmppath = tempfile.mkstemp()
                 tmpfp = os.fdopen(tmpfp, "w")
             else:
                 tmpfp = open(tmppath, "w")
