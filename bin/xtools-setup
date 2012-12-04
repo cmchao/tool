@@ -278,20 +278,20 @@ parser.add_option("-t", "--tmp",
 (options, args) = parser.parse_args()
 
 if options.listall:
-    xtools_list = search_xtool()
-    show_xtool_info(xtools_list)
+    xtools = search_xtool()
+    show_xtool_info(xtools)
 elif options.current:
     ret = access_config(False, "xtools.toolpath")
-    xtools_list = search_xtool(ret)
-    show_xtool_info(xtools_list)
+    xtools = search_xtool(ret)
+    show_xtool_info(xtools)
 elif options.dryrun or options.override or not options.override:
-    xtools_list = search_xtool()
-    show_xtool_info(xtools_list)
-    choice = get_choice(xtools_list)
+    xtools = search_xtool()
+    show_xtool_info(xtools)
+    choice = get_choice(xtools)
 
     if choice:
         choice = int(choice) - 1
-        path = xtools_list.keys()[choice]
+        path = xtools.keys()[choice]
         if options.dryrun:
             print "just try run"
         elif options.override:
