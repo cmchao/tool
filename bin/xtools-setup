@@ -289,11 +289,12 @@ elif options.dryrun or options.override or not options.override:
 
     if choice:
         choice = int(choice) - 1
+        path = xtools_list.keys()[choice]
         if options.dryrun:
             print "just try run"
         elif options.override:
-            ret = access_config(True, "xtools.toolpath", xtools_list[choice]['path'])
-            if ret == xtools_list[choice]['path']:
+            ret = access_config(True, "xtools.toolpath", path)
+            if ret == path:
                 print "Overrite success"
             else:
                 print "Overrite fail"
@@ -306,7 +307,7 @@ elif options.dryrun or options.override or not options.override:
                 tmpfp = open(tmppath, "w")
                 tmpfp.seek(0, 2)
 
-            tmpfp.write(xtools_list[choice]['path'] + "\n")
+            tmpfp.write(path + "\n")
             access_config(True, "xtools.tmp", tmppath)
             tmpfp.close()
             print "Tempory write  success"
