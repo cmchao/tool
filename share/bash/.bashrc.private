@@ -7,6 +7,28 @@ function mc {
    mkdir $1 && cd $1
 }
 
+function genhello {
+
+    if [ x$1 == x"" ]; then
+        hello_name="hello.c"
+    else
+        hello_name="$1"
+    fi
+
+    echo \
+"#include <stdio.h>
+
+int main(int argc, char *argv[])
+{
+    printf(\"hello\n\");
+
+    return 0;
+}
+
+" >> ${hello_name}
+}
+        
+
 function setup-xtools-env {
     xtoolpath=`config-query 'xtools.toolpath'`
     if [ $? -eq 0 ]; then
