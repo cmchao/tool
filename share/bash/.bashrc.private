@@ -10,6 +10,10 @@ function mc {
 function genhello {
 
     if [ x$1 == x"" ]; then
+        if [ -e "hello.c" ]; then
+            echo "hello.c exits"
+            exit 1
+        fi
         hello_name="hello.c"
     else
         hello_name="$1"
@@ -27,7 +31,6 @@ int main(int argc, char *argv[])
 
 " >> ${hello_name}
 }
-        
 
 function setup-xtools-env {
     xtoolpath=`config-query 'xtools.toolpath'`
@@ -135,6 +138,7 @@ alias cd3="cd ../../../"
 alias cd4="cd ../../../../"
 alias cd5="cd ../../../../../"
 alias cd6="cd ../../../../../../"
+alias cdc="cd / && cd -"
 alias dir="ls -al"
 alias dush="du -sh"
 alias codefmt="astyle --style=linux --indent=tab=8"
@@ -149,6 +153,7 @@ alias mlog4="make -j4 2>&1 | tee log"
 alias mcm="make clean && make"
 alias more="less -R"
 alias ll="ls -alF"
+alias llh="ls -alFh"
 alias ls="ls -F --color"
 alias less="less -R"
 alias l="less -R"
