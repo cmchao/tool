@@ -107,6 +107,10 @@ set wrap "Wrap lines
 
 set tags=./tags,../tags,../../tags,../../../tags
 
+let g:clang_use_library = 1
+let g:clang_library_path = '/usr/lib'
+
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => MISC
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
