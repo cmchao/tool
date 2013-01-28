@@ -144,7 +144,7 @@ def show_xtool_info(xtools):
 
     print cell_format % ("", "", 'Target', 'gcc', "abi")
     idx = 1 
-    for item in xtools.values():
+    for item in sorted(xtools.itervalues(), key=lambda x : x['gcc']['version']):
         if item['current']: 
             cur_mark = "*"
         else:
