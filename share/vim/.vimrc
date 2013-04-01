@@ -30,6 +30,10 @@ nmap <leader>d  :diffu<cr>
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc
 
+" Use default template for program language "
+autocmd bufnewfile *.py 0r ~/.vim/skel/python_template.py
+autocmd bufnewfile *.sh 0r ~/.vim/skel/bash_template.py
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
