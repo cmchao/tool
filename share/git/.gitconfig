@@ -1,12 +1,18 @@
+[include]
+    path = ~/.gitconfig.inc
+
 [user]
     name = Chih-Min Chao
-    email = cmchao@gmail.com
+    email = cmchao@marvell.com
 
 [alias]
     ama = am --abort
     amc = am --continue
     ap = apply
     br = branch --color
+    bi = bisect
+    bib = bisect bad
+    big = bisect good
     ce = cvsexportcommit -c
     ci = commit
     cia = commit -a
@@ -23,6 +29,9 @@
     st = status -s
     sta = stash apply
     rb = rebase
+    rbi = rebase -i
+    rbi4 = rebase -i HEAD~4
+    rbi9 = rebase -i HEAD~9
     rt = reset
     rth = reset --hard
     rth1 = reset --hard HEAD~1
@@ -30,6 +39,7 @@
     rth3 = reset --hard HEAD~3
     df = diff
     praise = blame 
+    pull = pull --ff-only
 
 [apply]
     whitespace = strip
@@ -53,18 +63,6 @@
 [push]
     default = tracking
 
-[sendemail]
-    smtpencryption = tls
-    smtpserver = smtp.gmail.com
-    smtpuser = cmchao@gmail.com
-    smptserverport = 587
-    suppresscc = all
-    
-[giggle]
-	main-window-maximized = false
-	main-window-geometry = 1132x760+125+102
-	main-window-view = TerminalView
-	history-view-vpane-position = 434
-	file-view-vpane-position = 381
-	file-view-hpane-position = 258
+[hooks]
+    indent = /home/cmchao/tool/bin/astyle
 
