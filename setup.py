@@ -109,6 +109,8 @@ def setup_git():
 
     cur = os.getcwd()
     home = os.getenv("HOME")
+    try_link(cur + "/share/git/.gitconfig", home + "/.gitconfig")
+    try_link(cur + "/share/git/.gitignore", home + "/.gitignore")
 
 
 def setup_gdb():
