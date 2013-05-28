@@ -3,7 +3,6 @@
 
 [user]
     name = Chih-Min Chao
-    email = cmchao@marvell.com
 
 [alias]
     ama = am --abort
