@@ -23,9 +23,9 @@ def setup_bash():
     home = os.getenv("HOME")
 
     cmd = """
-    if [ -e $H/.bashrc.private ]; then
-        . $HOME/.bashrc.private
-    fi
+if [ -e $H/.bashrc.private ]; then
+    . $HOME/.bashrc.private
+fi
     """
     if os.path.exists(home + "/.bashrc"):
         for line in open(home + "/.bashrc"):
@@ -33,9 +33,9 @@ def setup_bash():
                 print "[OK]%s : .bashrc has source .bashrc.private" % (selfname)
                 break
         else:
-            outfile = open(home + "/.bashrc", "a+")
-            print outfile, cmd
-            outfile.close()
+            with open(home + "/.bashrc", "a+") as outfile:
+                print >> outfile, cmd
+
             print "[OK]%s : insert source .bashrc.private to ~/.bashrc" % (selfname)
             try_link(cur + "/share/bash/.bashrc.private", home + "/.bashrc.private")
 
