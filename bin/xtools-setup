@@ -280,7 +280,7 @@ elif options.dryrun or options.override or not options.override:
 
     if choice:
         choice = int(choice) - 1
-        path = xtools.keys()[choice]
+        path = sorted(xtools.keys(), key=lambda x: xtools[x]['gcc']['version'])[choice]
         if options.dryrun:
             print "just try run"
         elif options.override:
