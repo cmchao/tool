@@ -129,13 +129,8 @@ def find_xtool_info(xtool):
 
 def show_xtool_info(xtools):
     prefix_len  = max([ len(item['target'])             for item in xtools.values() ])
-    vendor_len  = max([ len(item['vendor'])             for item in xtools.values() ])
     gcc_len     = max([ len(item['gcc']['version'])     for item in xtools.values() ])
     abi_len     = max([ len(item['gcc']['abi'])         for item in xtools.values() ])
-    cpu_len     = max([ len(item['gcc']['cpu'])         for item in xtools.values() ])
-    fpu_len     = max([ len(item['gcc']['fpu'])         for item in xtools.values() ])
-    binutil_len = max([ len(item['binutil']['version']) for item in xtools.values() ])
-    gdb_len     = max([ len(item['gdb']['version'])     for item in xtools.values() ])
 
     cell_format = "%%s%%-3s%%-%ds%%-%ds%%-%ds" % (
                             prefix_len + 1, 
