@@ -1,2 +1,3 @@
 .netrwhist
 share/tool/config
+*.pyc
