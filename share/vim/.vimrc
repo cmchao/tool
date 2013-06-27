@@ -6,6 +6,7 @@ set nocompatible
 set history=700
 
 " Enable filetype plugin
+filetype on
 filetype plugin on
 filetype indent on
 au BufNewFile,BufRead *.dml set filetype=dml
@@ -34,6 +35,7 @@ autocmd! bufwritepost vimrc source ~/.vimrc
 autocmd bufnewfile *.py 0r ~/.vim/skel/python_template.py
 autocmd bufnewfile *.sh 0r ~/.vim/skel/bash_template.py
 
+let g:pyflakes_use_quickfix = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
