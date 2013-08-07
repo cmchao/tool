@@ -21,6 +21,9 @@
     cp = cherry-pick
     cdf = clean -d -f
     ft = format-patch
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    lg = !"git lg1"
     rbc = rebase --continue
     rba = rebase --abort
     sr = svn rebase
@@ -29,8 +32,9 @@
     sta = stash apply
     rb = rebase
     rbi = rebase -i
-    rbi4 = rebase -i HEAD~4
-    rbi9 = rebase -i HEAD~9
+    rb4 = rebase -i HEAD~4
+    rb9 = rebase -i HEAD~9
+    rbn = rebase -i HEAD~20
     rt = reset
     rth = reset --hard
     rth1 = reset --hard HEAD~1
