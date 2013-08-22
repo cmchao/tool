@@ -11,6 +11,28 @@ filetype plugin on
 filetype indent on
 au BufNewFile,BufRead *.dml set filetype=dml
 
+" Bundle management
+" Install :
+"   open vim and :BundleInstall
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" Required
+Bundle 'gmarik/vundle'
+
+" @github
+Bundle 'kevinw/pyflakes-vim'
+
+" @Vim script
+" Bundle abcd
+" non github repo
+" Bundle git://abcd
+" local
+" Bundle file://
+
+" Required for Bundle
+filetype plugin indent on
+
 " Set to auto read when a file is changed from the outside
 set autoread
 
