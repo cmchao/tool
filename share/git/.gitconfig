@@ -40,9 +40,11 @@
     rth1 = reset --hard HEAD~1
     rth2 = reset --hard HEAD~2
     rth3 = reset --hard HEAD~3
-    df = diff
+    di = diff
+    dic = diff --cached
     praise = blame 
     pull = pull --ff-only
+    ver = rev-parse --short
 
 [apply]
     whitespace = strip
