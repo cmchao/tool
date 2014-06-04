@@ -22,6 +22,8 @@ Bundle 'gmarik/vundle'
 
 " @github
 Bundle 'kevinw/pyflakes-vim'
+Bundle 'tpope/vim-surround'
+Bundle 'Valloric/YouCompleteMe'
 
 " @Vim script
 " Bundle abcd
@@ -161,6 +163,7 @@ map <leader>p  :call TooglePaste()<cr>
 
 map <right> :bn<cr>
 map <left> :bp<cr>
+nmap <leader>c :b#<bar>bd#<cr>
 
 " Smart way to move btw. windows
 map <C-j> <C-W>j
