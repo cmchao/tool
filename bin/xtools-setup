@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+import ConfigParser
+import optparse
 import os
 import re
 import subprocess
-import optparse 
-import ConfigParser
 import tempfile
 
 def find_xtool_dir(path):
@@ -32,9 +32,9 @@ def find_xtool_dir(path):
 def find_xtool_bin(path):
     """ find target name, gcc/gdb/readelf path for specific xtool dir """
 
-    pattern = {"^arm-.*-gcc$" : 'gcc',
-               "^arm-.*-gdb$" : 'gdb',
-               "^arm-.*-readelf$" : 'binutil'}
+    pattern = {"^a.*-.*-gcc$" : 'gcc',
+               "^a.*-.*-gdb$" : 'gdb',
+               "^a.*-.*-readelf$" : 'binutil'}
     ret = dict()
     prefix = ""
 
@@ -44,7 +44,7 @@ def find_xtool_bin(path):
                 if re.match(item, filename):
                     ret[pattern[item]] = {"path" : os.path.join(root, filename)}
                     if not prefix:
-                        m = re.match('(arm-.*-.*)-(\w*)', filename)
+                        m = re.match('(a.*-.*-.*)-(\w*)', filename)
                         ret['target'] = m.group(1)
 
     if not ret:
@@ -181,7 +181,7 @@ def search_xtool(lookup_path = None):
             continue
 
         find_xtool_info(xtools[item])
-        
+
     # find and setup current xtool path
     cur_path = os.getenv('ARM_TOOLPATH')
     for item in xtools.keys():
