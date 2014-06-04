@@ -164,3 +164,7 @@ alias rm="rm -i"
 alias s="screen"
 alias vd="vimdiff"
 alias vimo="vim -O"
+
+#work
+alias towt="cd ~/work/tmp"
+alias totmp="cd /tmp"
