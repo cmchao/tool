@@ -15,7 +15,7 @@ def find_xtool_dir(path):
 
     while search_list :
         for item in search_list :
-            new_list += [item + "/" + path for path in os.listdir(item)]
+            new_list += [item + "/" + new_item for new_item in os.listdir(item)]
 
         del search_list[:]
 
