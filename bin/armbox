@@ -7,27 +7,33 @@
 #   the gcc must exist 
 
 toolname=`echo ${0##/*/} | cut -d '-' -f 2`;
-tooltype=`ls $ARM_TOOLPATH/bin/arm-*-gcc`
+toolarch=`echo ${0##/*/} | cut -d '-' -f 1`;
+tooltype=`ls $ARM_TOOLPATH/bin/${toolarch}-*-gcc`
 
-if [ -z $ARM_TOOLPATH ]; then
+if [[ -z $toolname ]]; then
+	echo "Unknown ARM tool";
+fi
+
+if [[ x"$toolarch" != x"arm" ]] && [[ x"$toolarch" != x"aarch64" ]]; then
+    echo "Unknown ARM arch  (arm/aarch64)";
+	exit 1;
+fi
+
+if [[ -z $ARM_TOOLPATH ]]; then
 	echo '$ARM_TOOLPATH' is not set;
 	exit 1;
 fi
 
-if [ ! -e $tooltype ]; then
+if [[ ! -e $tooltype ]]; then
 	echo "Can't find tooltype";
 	exit 1;
 fi
 
-tooltype=${tooltype##*arm-}
-tooltype=${tooltype%%-gcc}
+toolprefix=${tooltype##*/}
+toolprefix=${toolprefix%-gcc}
 
-realtool="$ARM_TOOLPATH/bin/arm-$tooltype-$toolname";
+realtool="$ARM_TOOLPATH/bin/${toolprefix}-$toolname";
 
-if [ -z $toolname ]; then
-	echo "Unknown ARM tool";
-	exit 1;
-fi
 
 if [ ! -x $realtool ]; then
 	"file is not executable"
