@@ -59,32 +59,34 @@ fi
 def setup_xtool():
     """ setup xtool """
 
+    arch_list = ["arm", "aarch64"]
     tool_list = [ 
-                "arm-addr2line",
-                "arm-ar",
-                "arm-as",
-                "arm-c++",
-                "arm-c++filt",
-                "arm-cpp",
-                "arm-g++",
-                "arm-gcc",
-                "arm-gccbug",
-                "arm-gcov",
-                "arm-ld",
-                "arm-nm",
-                "arm-objcopy",
-                "arm-objdump",
-                "arm-ranlib",
-                "arm-readelf",
-                "arm-size",
-                "arm-strings",
-                "arm-strip",
+                "addr2line",
+                "ar",
+                "as",
+                "c++",
+                "c++filt",
+                "cpp",
+                "g++",
+                "gcc",
+                "gccbug",
+                "gcov",
+                "ld",
+                "nm",
+                "objcopy",
+                "objdump",
+                "ranlib",
+                "readelf",
+                "size",
+                "strings",
+                "strip",
                 ]
 
     cur = os.getcwd()
     home = os.getenv("HOME")
-    for item in tool_list:
-        try_link(cur + "/tool/bin/armbox", home + "/tool/bin/" +  item)
+    for arch in arch_list:
+        for item in tool_list:
+            try_link(cur + "/tool/bin/armbox", home + "/tool/bin/" + arch + "-" + item)
 
 
 def setup_python():
