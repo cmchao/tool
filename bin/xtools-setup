@@ -237,8 +237,9 @@ def access_config(writedata, option, value = None):
         content.write(fp)
         return value
     else:
-        val = content.get(catagory, field)
-        if not val:
+        try :
+            val = content.get(catagory, field)
+        except:
             raise Exception("config file doesn't have '%s' field in '%s' section" % (field, catagory))  
         return val
     return None
