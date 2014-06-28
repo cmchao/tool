@@ -63,16 +63,24 @@ function start-agent {
     fi
 }
 
-set -o vi
-EDITOR="vim"
-PS1='\u@\h\[\e[1;36m\] \w$(__git_ps1 "\[\e[1;32m\] <%s>\[\e[1;34m\]") \[\e[1;33m\]`tmux_winidx`\[\033[1;32m\][`jobcount`]\[\e[m\]$ '
 
+set -o vi
+
+tmux_winidx() {
+    local winidx=$(tmux display-message -p '#I')
+    echo "($winidx)"
+}
+
+#PROMPT_COMMAND=`prompt_command`
+if [ x$BYOBU_BACKEN == x"screen" ]; then
+    PS1='\u@\h\[\e[1;36m\] \w$(__git_ps1 "\[\e[1;32m\] <%s>\[\e[1;34m\]") \[\e[1;33m\](${WINDOW})\[\033[1;32m\][`jobcount`]\[\e[m\]$ '
+else
+    PS1='\u@\h\[\e[1;36m\] \w$(__git_ps1 "\[\e[1;32m\] <%s>\[\e[1;34m\]") \[\e[1;33m\]$(tmux_winidx)\[\033[1;32m\][`jobcount`]\[\e[m\]$ '
+fi
 
 umask 022
-#if [ -t 0 ]; then
-#	# if interactive shell
-#	unalias ls
-#fi
+
+export EDITOR="vim"
 export CVS_RSH=ssh
 export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.sh=01;32:*.csh=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tz=01;31:*.rpm=01;31:*.cpio=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.xbm=01;35:*.xpm=01;35:*.png=01;35:*.tif=01;35:'
 export HISTTIMEFORMAT='%F %T '
