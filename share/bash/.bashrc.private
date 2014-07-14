@@ -48,6 +48,11 @@ function setup-xtools {
     fi
 }
 
+tmux_winidx() {
+    local winidx=`tmux display-message -p '#I'`
+    echo "($winidx)"
+}
+
 #
 # start ssh agent
 #
@@ -58,47 +63,10 @@ function start-agent {
     fi
 }
 
-
-
 set -o vi
-#CDPATH="/NOBACKUP"
 EDITOR="vim"
+PS1='\u@\h\[\e[1;36m\] \w$(__git_ps1 "\[\e[1;32m\] <%s>\[\e[1;34m\]") \[\e[1;33m\]`tmux_winidx`\[\033[1;32m\][`jobcount`]\[\e[m\]$ '
 
-#set prompt
-#PS1='\u@\h \[\033[1;36m\]\w\[\033[0m\][${WINDOW}][\[\033[1;32m\]`jobcount`\[\033[0m\]]$ '
-PS1='\u@\h\[\e[1;36m\] \w$(__git_ps1 "\[\e[1;32m\] <%s>\[\e[1;34m\]") \[\e[1;33m\][${WINDOW}]\[\033[1;32m\][`jobcount`]\[\e[m\]$ '
-
-function prompt_command {
-
-TERMWIDTH=${COLUMNS}
-
-#   Calculate the width of the prompt:
-
-hostnam=$(echo -n $HOSTNAME | sed -e "s/[\.].*//")
-#   "whoami" and "pwd" include a trailing newline
-usernam=$(whoami)
-let usersize=$(echo -n $usernam | wc -c | tr -d " ")
-newPWD="${PWD}"
-let pwdsize=$(echo -n ${newPWD} | wc -c | tr -d " ")
-#   Add all the accessories below ...
-let promptsize=$(echo -n "--(${usernam}@${hostnam})---(${PWD})--" \
-                 | wc -c | tr -d " ")
-let fillsize=${TERMWIDTH}-${promptsize}
-fill=""
-while [ "$fillsize" -gt "0" ] 
-do 
-   fill="${fill}-"
-   let fillsize=${fillsize}-1
-done
-
-if [ "$fillsize" -lt "0" ]
-then
-   let cut=3-${fillsize}
-   newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cut\}\)\(.*\)/\2/")"
-fi
-}
-
-#PROMPT_COMMAND=`prompt_command`
 
 umask 022
 #if [ -t 0 ]; then
@@ -127,9 +95,6 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[0;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[0;33m'
-#prompt
-
-#PS1='\u@\h \w[S: ${SCRN#/dev/tty}][`jobcount`]\$ '
 
 start-agent;
 setup-xtools-env;

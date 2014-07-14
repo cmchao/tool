@@ -86,7 +86,7 @@ def setup_xtool():
     home = os.getenv("HOME")
     for arch in arch_list:
         for item in tool_list:
-            try_link(cur + "/tool/bin/armbox", home + "/tool/bin/" + arch + "-" + item)
+            try_link(cur + "/bin/armbox", home + "/tool/bin/" + arch + "-" + item)
 
 
 def setup_python():
