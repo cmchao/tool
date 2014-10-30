@@ -49,8 +49,12 @@ function setup-xtools {
 }
 
 tmux_winidx() {
-    local winidx=`tmux display-message -p '#I'`
-    echo "($winidx)"
+    if [ $TERM = "screen" ]; then
+        tmp_winidx=`tmux display-message -p '#I'`
+        echo "($tmp_winidx)"
+    else
+        echo "()"
+    fi
 }
 
 #
@@ -65,11 +69,6 @@ function start-agent {
 
 
 set -o vi
-
-tmux_winidx() {
-    local winidx=$(tmux display-message -p '#I')
-    echo "($winidx)"
-}
 
 #PROMPT_COMMAND=`prompt_command`
 if [ x$BYOBU_BACKEN == x"screen" ]; then
