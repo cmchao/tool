@@ -79,3 +79,12 @@
 
 [color]
 	ui = auto
+
+[format]
+    signoff = true
+
+[sendemail]
+    smtpencryption = tls
+    smtpserver = smtp.gmail.com
+    smtpuser = cmchao@gmail.com
+    smtpserverport = 587
