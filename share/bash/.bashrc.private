@@ -57,6 +57,13 @@ tmux_winidx() {
     fi
 }
 
+function ssh-add-key {
+    haskey=`ssh-add -l | grep "$HOME/.ssh/id_rsa"`
+    if [[ x${haskey} = x"" ]]; then
+        ssh-add;
+    fi
+}
+
 # ssh-agent-procure.bash
 # v0.6.4
 # ensures that all shells sourcing this file in profile/rc scripts use the same ssh-agent.
@@ -68,7 +75,7 @@ mkdir -p "$AGENT_HOME"
 
 function ssh-procure-launch-agent {
     eval `ssh-agent -s -a ~/etc/ssh/ssh-agent-socket`;
-    ssh-add;
+    ssh-add-key;
 }
 
 if [ ! $SSH_AGENT_PID ]; then
@@ -87,6 +94,8 @@ if [ ! $SSH_AGENT_PID ]; then
   else
     ssh-procure-launch-agent;
   fi;
+else
+  ssh-add-key;
 fi;
 
 set -o vi
