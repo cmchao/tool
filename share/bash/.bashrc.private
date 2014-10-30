@@ -57,16 +57,37 @@ tmux_winidx() {
     fi
 }
 
-#
-# start ssh agent
-#
-function start-agent {
-    echo "Initialising new SSH agent... "
-    if [ x$SSH_AGENT_PID == x"" ]; then
-        /usr/bin/ssh-agent -s && /usr/bin/ssh-add
-    fi
+# ssh-agent-procure.bash
+# v0.6.4
+# ensures that all shells sourcing this file in profile/rc scripts use the same ssh-agent.
+# copyright me, now; licensed under the DWTFYWT license.
+# get from 'http://superuser.com/questions/141044/sharing-the-same-ssh-agent-among-multiple-login-sessions'
+
+AGENT_HOME=$HOME/.etc/ssh
+mkdir -p "$AGENT_HOME"
+
+function ssh-procure-launch-agent {
+    eval `ssh-agent -s -a ~/etc/ssh/ssh-agent-socket`;
+    ssh-add;
 }
 
+if [ ! $SSH_AGENT_PID ]; then
+  if [ -e $AGENT_HOME/ssh-agent-socket ] ; then
+    SSH_AGENT_PID=`ps -fC ssh-agent |grep 'etc/ssh/ssh-agent-socket' |sed -r 's/^\S+\s+(\S+).*$/\1/'`;
+    if [[ $SSH_AGENT_PID =~ [0-9]+ ]]; then
+      # in this case the agent has already been launched and we are just attaching to it.
+      ##++  It should check that this pid is actually active & belongs to an ssh instance
+      export SSH_AGENT_PID;
+      SSH_AUTH_SOCK=$AGENT_HOME/ssh-agent-socket; export SSH_AUTH_SOCK;
+    else
+      # in this case there is no agent running, so the socket file is left over from a graceless agent termination.
+      rm $AGENT_HOME/ssh-agent-socket;
+      ssh-procure-launch-agent;
+    fi;
+  else
+    ssh-procure-launch-agent;
+  fi;
+fi;
 
 set -o vi
 
@@ -103,7 +124,6 @@ export LESS_TERMCAP_so=$'\E[0;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[0;33m'
 
-start-agent;
 setup-xtools-env;
 
 alias cd2="cd ../../"
