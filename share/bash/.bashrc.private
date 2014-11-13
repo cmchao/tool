@@ -74,7 +74,7 @@ AGENT_HOME=$HOME/.etc/ssh
 mkdir -p "$AGENT_HOME"
 
 function ssh-procure-launch-agent {
-    eval `ssh-agent -s -a ~/etc/ssh/ssh-agent-socket`;
+    eval `ssh-agent -s -a ~/.etc/ssh/ssh-agent-socket`;
     ssh-add-key;
 }
 
