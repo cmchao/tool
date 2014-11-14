@@ -49,7 +49,7 @@ function setup-xtools {
 }
 
 tmux_winidx() {
-    if [ $TERM = "screen" ]; then
+    if [ $TMUX ]; then
         tmp_winidx=`tmux display-message -p '#I'`
         echo "($tmp_winidx)"
     else
