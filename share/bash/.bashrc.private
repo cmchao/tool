@@ -94,7 +94,7 @@ if [ ! $SSH_AGENT_PID ] && [ ! $SSH_AUTH_SOCK ]; then
   else
     ssh-procure-launch-agent;
   fi;
-else
+elif [ ! $SSH_AUTH_SOCK ]; then
   ssh-add-key;
 fi;
 
