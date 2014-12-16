@@ -42,6 +42,9 @@
     rb9 = rebase -i HEAD~9
     rbn = rebase -i HEAD~20
     rt = reset
+    rt1 = reset HEAD~1
+    rt2 = reset HEAD~2
+    rt3 = reset HEAD~3
     rth = reset --hard
     rth1 = reset --hard HEAD~1
     rth2 = reset --hard HEAD~2
