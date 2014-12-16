@@ -17,20 +17,17 @@ au BufNewFile,BufRead *.dml set filetype=dml
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" Required
-Bundle 'gmarik/vundle'
+" Let Vundle manage itself
+Plugin 'gmarik/vundle'
 
-" @github
-Bundle 'kevinw/pyflakes-vim'
-Bundle 'tpope/vim-surround'
-Bundle 'Valloric/YouCompleteMe'
-
-" @Vim script
-" Bundle abcd
-" non github repo
-" Bundle git://abcd
-" local
-" Bundle file://
+" Plugins
+"   python lint
+Plugin 'kevinw/pyflakes-vim'
+Plugin 'tpope/vim-surround'
+"   auto complete
+Plugin 'Valloric/YouCompleteMe'
+"   perl lint
+Plugin 'scrooloose/syntastic'
 
 " Required for Bundle
 filetype plugin indent on
