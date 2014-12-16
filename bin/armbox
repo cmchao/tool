@@ -8,7 +8,7 @@
 
 toolname=`echo ${0##/*/} | cut -d '-' -f 2`;
 toolarch=`echo ${0##/*/} | cut -d '-' -f 1`;
-tooltype=`ls $ARM_TOOLPATH/bin/${toolarch}-*-gcc`
+tooltype=`ls $ARM_TOOLPATH/bin/${toolarch}-*-gcc | head -1`
 
 if [[ -z $toolname ]]; then
 	echo "Unknown ARM tool";
