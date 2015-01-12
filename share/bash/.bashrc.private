@@ -78,7 +78,7 @@ function ssh-procure-launch-agent {
     ssh-add-key;
 }
 
-if [ ! $SSH_AGENT_PID ] && [ ! $SSH_AUTH_SOCK ]; then
+if [ -z $SSH_AGENT_PID ] && [ -z $SSH_AUTH_SOCK ]; then
   if [ -e $AGENT_HOME/ssh-agent-socket ] ; then
     SSH_AGENT_PID=`ps -fC ssh-agent |grep 'etc/ssh/ssh-agent-socket' |sed -r 's/^\S+\s+(\S+).*$/\1/'`;
     if [[ $SSH_AGENT_PID =~ [0-9]+ ]]; then
@@ -94,7 +94,7 @@ if [ ! $SSH_AGENT_PID ] && [ ! $SSH_AUTH_SOCK ]; then
   else
     ssh-procure-launch-agent;
   fi;
-elif [ ! $SSH_AUTH_SOCK ]; then
+elif [ -n $SSH_AUTH_SOCK ]; then
   ssh-add-key;
 fi;
 
