@@ -10,6 +10,7 @@ filetype on
 filetype plugin on
 filetype indent on
 au BufNewFile,BufRead *.dml set filetype=dml
+au BufNewFile,BufRead *.go set filetype=go
 
 " Bundle management
 " Install :

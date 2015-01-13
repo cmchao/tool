@@ -115,7 +115,7 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:bd=40;33;01:cd
 export HISTTIMEFORMAT='%F %T '
 
 export MYTOOL="${HOME}/tool"
-export PATH="${MYTOOL}/bin:/opt/arm/install/DS-5-r5p0-13rel0//bin:${HOME}/.vim/bin:$PATH"
+export PATH="${MYTOOL}/bin:/usr/local/go/bin:/opt/arm/install/DS-5-r5p0-13rel0//bin:${HOME}/.vim/bin:$PATH"
 export PERL5LIB="${MYTOOL}/lib/perl5:${MYTOOL}/lib/perl5/site_perl/5.8.7"
 export PYTHONPATH="${MYTOOL}/lib/python"
 export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
