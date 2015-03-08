@@ -1,0 +1,2 @@
+the template files are loaded throught $HOME/.vimrc.
+When there are new files, vimrc need to be modified also

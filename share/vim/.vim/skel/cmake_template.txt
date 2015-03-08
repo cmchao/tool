@@ -1,0 +1,13 @@
+# version compatibility check
+cmake_minimum_required(VERSION 2.6)
+
+# a global project naame
+project(project_name)
+
+# set flags to compiler
+add_definitions(-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE)
+set(CMAKE_C_FLAGS "-g -Wall -Wundef -Wwrite-strings -Wmissing-prototypes -Wstrict-prototypes -Wredundant-decls")
+set(CMAKE_CXX_FLAGS "-g -Wall -Wundef -Wwrite-strings -Wmissing-prototypes -Wstrict-prototypes -Wredundant-decls")
+
+# set include search path
+include_directories("path")
