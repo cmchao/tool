@@ -12,26 +12,42 @@ filetype indent on
 au BufNewFile,BufRead *.dml set filetype=dml
 au BufNewFile,BufRead *.go set filetype=go
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vundle management
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Bundle management
 " Install :
 "   open vim and :BundleInstall
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+"""""""""""""""""""""""""""""
+" Plugin list
 " Let Vundle manage itself
 Plugin 'gmarik/vundle'
 
 " Plugins
-"   python lint
-Plugin 'kevinw/pyflakes-vim'
 Plugin 'tpope/vim-surround'
 "   auto complete
 Plugin 'Valloric/YouCompleteMe'
-"   perl lint
+"   general lint
 Plugin 'scrooloose/syntastic'
 
-" Required for Bundle
-filetype plugin indent on
+"""""""""""""""""""""""""""""
+" Plugin Setting
+" scrooloose/syntastic checker "
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_python_checkers = ["pyflakes"]
+
+
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -57,7 +73,6 @@ autocmd! bufwritepost vimrc source ~/.vimrc
 autocmd bufnewfile *.py 0r ~/.vim/skel/python_template.py
 autocmd bufnewfile *.sh 0r ~/.vim/skel/bash_template.py
 
-let g:pyflakes_use_quickfix = 0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
