@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 }
 
 function setup-xtools-env {
-    xtoolpath=`config-query 'xtools.toolpath'`
+    xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.toolpath'`
     if [ $? -eq 0 ]; then
         export ARM_TOOLPATH="${xtoolpath}"
     fi
