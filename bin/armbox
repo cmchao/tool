@@ -6,16 +6,21 @@
 #   the origin toolchain name is "arm-what-ever-you-want-gcc
 #   the gcc must exist 
 
+# gcc or readelf or others
 toolname=`echo ${0##/*/} | cut -d '-' -f 2`;
+
+# arm/aarch64 only
 toolarch=`echo ${0##/*/} | cut -d '-' -f 1`;
-tooltype=`ls $ARM_TOOLPATH/bin/${toolarch}-*-gcc | head -1`
+
+# 
+gcc_path=`ls $ARM_TOOLPATH/bin/${toolarch}-*-gcc | head -1`
 
 if [[ -z $toolname ]]; then
 	echo "Unknown ARM tool";
 fi
 
 if [[ x"$toolarch" != x"arm" ]] && [[ x"$toolarch" != x"aarch64" ]]; then
-    echo "Unknown ARM arch  (arm/aarch64)";
+    echo "Unknown ARM arch  '$toolarch' It must be 'arm' or 'aarch64'";
 	exit 1;
 fi
 
@@ -24,8 +29,8 @@ if [[ -z $ARM_TOOLPATH ]]; then
 	exit 1;
 fi
 
-if [[ ! -e $tooltype ]]; then
-	echo "Can't find tooltype";
+if [[ ! -e $gcc_path ]]; then
+	echo "Can't find gcc in '$gcc_path'";
 	exit 1;
 fi
 
