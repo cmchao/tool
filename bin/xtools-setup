@@ -1,6 +1,6 @@
 #!/usr/bin/env python
+import argparse
 import ConfigParser
-import optparse
 import os
 import re
 import subprocess
@@ -28,6 +28,7 @@ def find_xtool_dir(path):
         del new_list[:]
 
     return select_list
+
 
 def find_xtool_bin(path):
     """ find target name, gcc/gdb/readelf path for specific xtool dir """
@@ -212,6 +213,7 @@ def get_choice(xtools):
 
     return int(choice)
 
+
 def access_config(writedata, option, value = None):
     config = os.getenv('HOME') + "/." + os.getenv('USER') + "-tool/config"
     catagory, field = option.split('.')
@@ -244,68 +246,77 @@ def access_config(writedata, option, value = None):
         return val
     return None
 
-#
-# main starat
-#
-parser = optparse.OptionParser()
-parser.add_option("-l", "--list", 
-                    action="store_true", dest="listall", default=False,
-                    help="List available toolchain version")
-parser.add_option("-d", "--dry", 
-                    action="store_true", dest="dryrun", default=False,
-                    help="Don't take an effect")
-parser.add_option("-c", "--current", 
-                    action="store_true", dest="current", default=False,
-                    help="Look up current tool version")
-parser.add_option("-o", "--override", 
-                    action="store_true", dest="override", default=False,
-                    help="Override global config for each new shell")
-parser.add_option("-t", "--tmp", 
-                    action="store_false", dest="override",
-                    help="Write path to tempory file, specified by config. "
-                         "If the file doesn't exist, generate it")
 
-(options, args) = parser.parse_args()
+def parse_argv():
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
+            description=("cross toolchain setup tool\n"
+                         "The tool search config in the following order\n"
+                         "    1. $XTOOL_DIR\n"
+                         "    2. $HOME/tool/x-tools\n"))
 
-if options.listall:
-    xtools = search_xtool()
-    show_xtool_info(xtools)
-elif options.current:
-    ret = access_config(False, "xtools.toolpath")
-    xtools = search_xtool(ret)
-    show_xtool_info(xtools)
-elif options.dryrun or options.override or not options.override:
-    xtools = search_xtool()
-    show_xtool_info(xtools)
-    choice = get_choice(xtools)
+    parser.add_argument("-l", "--list", 
+                        action="store_true", dest="listall", default=False,
+                        help="List available toolchain version")
+    parser.add_argument("-d", "--dry", 
+                        action="store_true", dest="dryrun", default=False,
+                        help="Don't take an effect")
+    parser.add_argument("-c", "--current", 
+                        action="store_true", dest="current", default=False,
+                        help="Look up current tool version")
+    parser.add_argument("-o", "--override", 
+                        action="store_true", dest="override", default=False,
+                        help="Override global config for each new shell")
+    parser.add_argument("-t", "--tmp", 
+                        action="store_false", dest="override",
+                        help="Write path to tempory file, specified by config. "
+                             "If the file doesn't exist, generate it")
 
-    if choice:
-        choice = int(choice) - 1
-        path = sorted(xtools.keys(), key=lambda x: xtools[x]['gcc']['version'])[choice]
-        if options.dryrun:
-            print "just try run"
-        elif options.override:
-            ret = access_config(True, "xtools.toolpath", path)
-            if ret == path:
-                print "Overrite success"
+    return parser.parse_args()
+
+
+def run(cmd_opts):
+    if cmd_opts.listall:
+        xtools = search_xtool()
+        show_xtool_info(xtools)
+    elif cmd_opts.current:
+        ret = access_config(False, "xtools.toolpath")
+        xtools = search_xtool(ret)
+        show_xtool_info(xtools)
+    elif cmd_opts.dryrun or cmd_opts.override or not cmd_opts.override:
+        xtools = search_xtool()
+        show_xtool_info(xtools)
+        choice = get_choice(xtools)
+
+        if choice:
+            choice = int(choice) - 1
+            path = sorted(xtools.keys(), key=lambda x: xtools[x]['gcc']['version'])[choice]
+            if cmd_opts.dryrun:
+                print "just try run"
+            elif cmd_opts.override:
+                ret = access_config(True, "xtools.toolpath", path)
+                if ret == path:
+                    print "Overrite success"
+                else:
+                    print "Overrite fail"
             else:
-                print "Overrite fail"
-        else:
-            tmppath = access_config(False, "xtools.tmp")
-            if not tmppath or not os.path.exists(tmppath):
-                tmpfp, tmppath = tempfile.mkstemp()
-                tmpfp = os.fdopen(tmpfp, "w")
-            else:
-                tmpfp = open(tmppath, "w")
-                tmpfp.seek(0, 2)
+                tmppath = access_config(False, "xtools.tmp")
+                if not tmppath or not os.path.exists(tmppath):
+                    tmpfp, tmppath = tempfile.mkstemp()
+                    tmpfp = os.fdopen(tmpfp, "w")
+                else:
+                    tmpfp = open(tmppath, "w")
+                    tmpfp.seek(0, 2)
 
-            tmpfp.write(path + "\n")
-            access_config(True, "xtools.tmp", tmppath)
-            tmpfp.close()
-            print "Tempory write  success"
-else:
-    parser.print_help()
+                tmpfp.write(path + "\n")
+                access_config(True, "xtools.tmp", tmppath)
+                tmpfp.close()
+                print "Tempory write  success"
+    else:
+        print "why ???"
 
 
+if __name__ == "__main__":
+    cmd_opts = parse_argv()
+    run(cmd_opts)
 
-   
+
