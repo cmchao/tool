@@ -71,9 +71,10 @@ autocmd! bufwritepost vimrc source ~/.vimrc
 
 " Use default template for program language "
 autocmd bufnewfile *.c  0r ~/.vim/skel/c_template.c
+autocmd bufnewfile CMakeLists.txt  0r ~/.vim/skel/cmake_template.txt
 autocmd bufnewfile *.cpp  0r ~/.vim/skel/cpp_template.cpp
 autocmd bufnewfile *.go  0r ~/.vim/skel/go_template.go
-autocmd bufnewfile CMakeLists.txt  0r ~/.vim/skel/cmake_template.txt
+autocmd bufnewfile *.pl  0r ~/.vim/skel/perl_template.pl
 autocmd bufnewfile *.py 0r ~/.vim/skel/python_template.py
 autocmd bufnewfile *.sh 0r ~/.vim/skel/bash_template.sh
 
