@@ -70,11 +70,12 @@ nmap <leader>d  :diffu<cr>
 autocmd! bufwritepost vimrc source ~/.vimrc
 
 " Use default template for program language "
-autocmd bufnewfile *.py 0r ~/.vim/skel/python_template.py
-autocmd bufnewfile *.sh 0r ~/.vim/skel/bash_template.sh
 autocmd bufnewfile *.c  0r ~/.vim/skel/c_template.c
 autocmd bufnewfile *.cpp  0r ~/.vim/skel/cpp_template.cpp
+autocmd bufnewfile *.go  0r ~/.vim/skel/go_template.go
 autocmd bufnewfile CMakeLists.txt  0r ~/.vim/skel/cmake_template.txt
+autocmd bufnewfile *.py 0r ~/.vim/skel/python_template.py
+autocmd bufnewfile *.sh 0r ~/.vim/skel/bash_template.sh
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
