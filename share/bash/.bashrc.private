@@ -33,18 +33,29 @@ int main(int argc, char *argv[])
 }
 
 function setup-xtools-env {
-    xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.toolpath'`
+    xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.arm_toolpath'`
     if [ $? -eq 0 ]; then
         export ARM_TOOLPATH="${xtoolpath}"
+    fi
+
+    xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.aarch64_toolpath'`
+    if [ $? -eq 0 ]; then
+        export AARCH64_TOOLPATH="${xtoolpath}"
     fi
 }
 
 function setup-xtools {
     xtools-setup -t
-    xtoolpath=`config-query 'xtools.tmp'`
+    xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.arm_tmp'`
     if [ $? -eq 0 ]; then
         xtoolpath=`head -1 ${xtoolpath}`
         export ARM_TOOLPATH="${xtoolpath}"
+    fi
+
+    xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.aarch64_tmp'`
+    if [ $? -eq 0 ]; then
+        xtoolpath=`head -1 ${xtoolpath}`
+        export AARCH64_TOOLPATH="${xtoolpath}"
     fi
 }
 

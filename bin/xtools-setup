@@ -4,6 +4,7 @@ import ConfigParser
 import os
 import re
 import subprocess
+import sys
 import tempfile
 
 def find_xtool_dir(path):
@@ -14,8 +15,10 @@ def find_xtool_dir(path):
     new_list = []
 
     while search_list :
+
         for item in search_list :
-            new_list += [item + "/" + new_item for new_item in os.listdir(item)]
+            if os.path.isdir(item):
+                new_list += [item + "/" + new_item for new_item in os.listdir(item)]
 
         del search_list[:]
 
@@ -52,6 +55,7 @@ def find_xtool_bin(path):
         raise Exception('File not found')
     else:
         return ret
+
 
 def find_xtool_info(xtool):
     """ find gcc/gdb/binutil verision information """
@@ -138,7 +142,7 @@ def show_xtool_info(xtools):
                             gcc_len + 1, 
                             abi_len + 1)
 
-    print cell_format % ("", "", 'Target', 'gcc', "abi")
+    print cell_format % (" ", "", 'Target', 'gcc', "abi")
     idx = 1 
     for item in sorted(xtools.itervalues(), key=lambda x : x['gcc']['version']):
         if item['current']: 
@@ -278,11 +282,25 @@ def run(cmd_opts):
     if cmd_opts.listall:
         xtools = search_xtool()
         show_xtool_info(xtools)
-    elif cmd_opts.current:
-        ret = access_config(False, "xtools.toolpath")
+
+        sys.exit(0)
+
+    if cmd_opts.current:
+        ret = access_config(writedata=False, option="xtools.arm_toolpath")
         xtools = search_xtool(ret)
+
+        print "arm x-tool"
         show_xtool_info(xtools)
-    elif cmd_opts.dryrun or cmd_opts.override or not cmd_opts.override:
+
+        print "\naarch64 x-tool"
+        ret = access_config(writedata=False, option="xtools.aarch64_toolpath")
+        xtools = search_xtool(ret)
+
+        show_xtool_info(xtools)
+
+        sys.exit(0)
+
+    if cmd_opts.dryrun or cmd_opts.override or not cmd_opts.override:
         xtools = search_xtool()
         show_xtool_info(xtools)
         choice = get_choice(xtools)
@@ -290,16 +308,26 @@ def run(cmd_opts):
         if choice:
             choice = int(choice) - 1
             path = sorted(xtools.keys(), key=lambda x: xtools[x]['gcc']['version'])[choice]
+
+            basename = os.path.basename(path)
+            if "arm" in basename:
+                arch = "arm"
+            elif "aarch64":
+                arch = "aarch64"
+            else:
+               print "Unknown arch '%s'" % (arch)
+
             if cmd_opts.dryrun:
                 print "just try run"
             elif cmd_opts.override:
-                ret = access_config(True, "xtools.toolpath", path)
+                ret = access_config(writedata=True, option="xtools.%s_toolpath" % (arch), value=path)
                 if ret == path:
                     print "Overrite success"
                 else:
                     print "Overrite fail"
             else:
-                tmppath = access_config(False, "xtools.tmp")
+                ini_field = "xtools.%s_tmp" % (arch)
+                tmppath = access_config(writedata=False, option=ini_field)
                 if not tmppath or not os.path.exists(tmppath):
                     tmpfp, tmppath = tempfile.mkstemp()
                     tmpfp = os.fdopen(tmpfp, "w")
@@ -308,11 +336,16 @@ def run(cmd_opts):
                     tmpfp.seek(0, 2)
 
                 tmpfp.write(path + "\n")
-                access_config(True, "xtools.tmp", tmppath)
+                access_config(writedata=True, option=ini_field, value=tmppath)
                 tmpfp.close()
                 print "Tempory write  success"
-    else:
-        print "why ???"
+
+        sys.exit(0)
+
+
+    #should not be here
+    print "unknown error"
+    sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -12,8 +12,6 @@ toolname=`echo ${0##/*/} | cut -d '-' -f 2`;
 # arm/aarch64 only
 toolarch=`echo ${0##/*/} | cut -d '-' -f 1`;
 
-# 
-gcc_path=`ls $ARM_TOOLPATH/bin/${toolarch}-*-gcc | head -1`
 
 if [[ -z $toolname ]]; then
 	echo "Unknown ARM tool";
@@ -24,24 +22,35 @@ if [[ x"$toolarch" != x"arm" ]] && [[ x"$toolarch" != x"aarch64" ]]; then
 	exit 1;
 fi
 
-if [[ -z $ARM_TOOLPATH ]]; then
-	echo '$ARM_TOOLPATH' is not set;
-	exit 1;
+if [[ x"$toolarch" = x"arm" ]]; then
+    if [[ -z $ARM_TOOLPATH ]]; then
+        echo '$ARM_TOOLPATH' is not set;
+        exit 1;
+    fi
+    REAL_TOOLPATH=$ARM_TOOLPATH
+
+else
+    if [[ -z $AARCH64_TOOLPATH ]]; then
+        echo '$AARCH64_TOOLPATH' is not set;
+        exit 1;
+    fi
+    REAL_TOOLPATH=$AARCH64_TOOLPATH
 fi
+
+gcc_path=`ls $REAL_TOOLPATH/bin/${toolarch}-*-gcc | head -1`
 
 if [[ ! -e $gcc_path ]]; then
-	echo "Can't find gcc in '$gcc_path'";
-	exit 1;
+    echo "Can't find gcc in '$gcc_path'";
+    exit 1;
 fi
 
-toolprefix=${tooltype##*/}
+toolprefix=${gcc_path##*/}
 toolprefix=${toolprefix%-gcc}
-
-realtool="$ARM_TOOLPATH/bin/${toolprefix}-$toolname";
+realtool="$REAL_TOOLPATH/bin/${toolprefix}-$toolname";
 
 
 if [ ! -x $realtool ]; then
-	"file is not executable"
+	echo "$realtool is not executable"
 	exit 1;
 fi
 
