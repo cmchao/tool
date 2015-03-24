@@ -107,6 +107,8 @@ if [ -z $SSH_AGENT_PID ] && [ -z $SSH_AUTH_SOCK ]; then
   fi;
 elif [ -z $SSH_AUTH_SOCK ]; then
   ssh-add-key;
+else
+  ssh-add-key;
 fi;
 
 set -o vi
