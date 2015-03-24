@@ -191,9 +191,12 @@ def search_xtool(lookup_path = None):
         find_xtool_info(xtools[item])
 
     # find and setup current xtool path
-    cur_path = os.getenv('ARM_TOOLPATH')
+    arm_path = os.getenv('ARM_TOOLPATH')
+    aarch64_path = os.getenv('AARCH64_TOOLPATH')
     for item in xtools.keys():
-        if cur_path and cur_path == item:
+        if (arm_path and arm_path == item):
+            xtools[item]['current'] = True
+        elif (aarch64_path and aarch64_path == item):
             xtools[item]['current'] = True
         else:
             xtools[item]['current'] = False
