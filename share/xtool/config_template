@@ -1,0 +1,6 @@
+[xtools]
+arm_toolpath =
+arm_tmp = 
+aarch64_toolpath =
+aarch64_tmp =
+
