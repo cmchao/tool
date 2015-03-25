@@ -10,9 +10,9 @@ def try_link(src, dst):
 
     try:
         os.symlink(src, dst)
-        print "[OK]%s : link '%s' to '%s'" % (caller, src, dst)
+        print "[Ok]%s : link '%s' to '%s'" % (caller, src, dst)
     except OSError as e:
-        print "[ERROR]%s : link '%s' to '%s' (%s)" % (caller, src, dst, e.strerror)
+        print "[Skip]%s : link '%s' to '%s' (%s)" % (caller, src, dst, e.strerror)
 
 
 def setup_bash():
