@@ -55,7 +55,6 @@ fi
         return
 
 
-
 def setup_xtool():
     """ setup xtool """
 
@@ -154,20 +153,25 @@ def get_choice(max_choice):
     return int(choice)
 
 
-tool_name = ["bash", "xtool", "python", "vim", "git", "gdb", "all"]
-tool_callback = [setup_bash, setup_xtool, setup_python, 
-                 setup_vim, setup_git, setup_gdb, setup_all]
-tools = dict(zip(tool_name, tool_callback))
+def run():
+    tool_name = ["bash", "xtool", "python", "vim", "git", "gdb", "all"]
+    tool_callback = [setup_bash, setup_xtool, setup_python, 
+                     setup_vim, setup_git, setup_gdb, setup_all]
+    tools = dict(zip(tool_name, tool_callback))
 
 
-for idx, item in enumerate(tools.keys()):
-    print "%-2d : %-10s" % (idx + 1, item)
+    for idx, item in enumerate(tools.keys()):
+        print "%-2d : %-10s" % (idx + 1, item)
 
-choice = get_choice(len(tools))
-if choice:
-    tools[tools.keys()[choice - 1]]()
-else:
-    print "Do nothing"
-    sys.exit(0)
+    choice = get_choice(len(tools))
+    if choice:
+        tools[tools.keys()[choice - 1]]()
+    else:
+        print "Do nothing"
+        sys.exit(0)
+
+
+if __name__ ==  "__main__":
+    run()
 
 
