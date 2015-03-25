@@ -68,6 +68,7 @@ def setup_xtool():
                 "cpp",
                 "g++",
                 "gcc",
+                "gdb",
                 "gccbug",
                 "gcov",
                 "ld",
