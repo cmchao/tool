@@ -1,0 +1,22 @@
+#!/bin/bash
+#set -x
+
+target="$1"
+if [[ -z $target ]]; then
+    echo "usage : $0 input_file"
+    exit 1
+fi
+
+content=`file -b $target | head -n 1`
+
+echo $content
+if [[ $content == *"aarch64"* ]]; then
+    tool="aarch64-objdump"
+elif [[ $content == *"ARM"* ]]; then
+    tool="arm-objdump"
+else
+    echo "not arm/aarch64 elf. The type is '$content'"
+    exit 1
+fi
+
+$tool -D $target
