@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import argparse
 import inspect
 import os
 import sys
@@ -152,6 +153,14 @@ def get_choice(max_choice):
     return int(choice)
 
 
+def parse_argv():
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
+            description=("Setup our Ubuntu working environment\n"
+                         "Please execute the '%s' in this directory\n") % sys.argv[0])
+
+    return parser.parse_args()
+
+
 def run():
     tool_name = ["bash", "xtool", "python", "vim", "git", "gdb"]
     tool_callback = [setup_bash, setup_xtool, setup_python, 
@@ -174,6 +183,7 @@ def run():
 
 
 if __name__ ==  "__main__":
+    parse_argv()
     run()
 
 
