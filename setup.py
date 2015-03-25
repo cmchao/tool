@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import inspect
-import sys
 import os
+import sys
 
 def try_link(src, dst):
     """ link src to dst and print msg by caller name """
