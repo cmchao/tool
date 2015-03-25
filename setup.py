@@ -89,6 +89,7 @@ def setup_xtool():
         for item in tool_list:
             try_link(cur + "/bin/armbox", home + "/tool/bin/" + arch + "-" + item)
 
+    try_link(cur + "/bin/dis", home + "/tool/bin/")
 
 def setup_python():
     """ setup python """
