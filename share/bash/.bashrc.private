@@ -71,7 +71,7 @@ tmux_winidx() {
 function ssh-add-key {
     haskey=`ssh-add -l | grep "$HOME/.ssh/id_rsa"`
     if [[ x${haskey} = x"" ]]; then
-        ssh-add;
+        ssh-add "$HOME/.ssh/id_rsa";
     fi
 }
 
@@ -105,9 +105,8 @@ if [ -z $SSH_AGENT_PID ] && [ -z $SSH_AUTH_SOCK ]; then
   else
     ssh-procure-launch-agent;
   fi;
-elif [ -z $SSH_AUTH_SOCK ]; then
-  ssh-add-key;
-else
+#$SSH_CLIENT will be set when agent is  forwarded
+elif [[ -n $SSH_AUTH_SOCK ]] && [[ -z $SSH_CLIENT ]]; then
   ssh-add-key;
 fi;
 
