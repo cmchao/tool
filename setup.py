@@ -126,6 +126,14 @@ def setup_gdb():
     try_link(cur + "/share/gdb/.gdbscript", home + "/.gdbscript")
 
 
+def setup_misc():
+    """ setup misc """
+
+    cur = os.getcwd()
+    home = os.getenv("HOME")
+    try_link(cur + "/bin/suspend", home + "/tool/bin/")
+
+
 def setup_all(tools):
     """do all task.  """
 
@@ -163,9 +171,9 @@ def parse_argv():
 
 
 def run():
-    tool_name = ["bash", "xtool", "python", "vim", "git", "gdb"]
+    tool_name = ["bash", "xtool", "python", "vim", "git", "gdb", "misc"]
     tool_callback = [setup_bash, setup_xtool, setup_python, 
-                     setup_vim, setup_git, setup_gdb]
+                     setup_vim, setup_git, setup_gdb, setup_misc]
     tools = dict(zip(tool_name, tool_callback))
 
     for idx, item in enumerate(tools.keys()):
@@ -174,9 +182,9 @@ def run():
         print "%-2d : %-10s" % (idx + 2, "all")
 
     choice = get_choice(len(tools) + 1)
-    if choice >= 0 and choice <= 6:
+    if choice >= 0 and choice <= len(tool_name):
         tools[tools.keys()[choice - 1]]()
-    elif choice == 7:
+    elif choice == len(tool_name) + 1:
         setup_all(tools)
     else:
         print "Do nothing"
