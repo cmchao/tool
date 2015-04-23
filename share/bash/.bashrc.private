@@ -73,6 +73,10 @@ function ssh-add-key {
     if [[ x${haskey} = x"" ]]; then
         ssh-add "$HOME/.ssh/id_rsa";
     fi
+    haskey=`ssh-add -l | grep "$HOME/.ssh/id_dsa"`
+    if [[ x${haskey} = x"" ]]; then
+        ssh-add "$HOME/.ssh/id_rsa";
+    fi
 }
 
 # ssh-agent-procure.bash
