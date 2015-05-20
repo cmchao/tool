@@ -138,6 +138,7 @@ export PYTHONPATH="${MYTOOL}/lib/python"
 export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
 export MANPATH="$MANPATH:/usr/local/share/man:${MYTOOL}/man:${MYTOOL}/share/man"
 export LD_LIBRARY_PATH="${HOME}/tool/lib"
+export TERM=screen
 
 #color manpage
 export PAGER="/usr/bin/less -s"
