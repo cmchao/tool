@@ -75,7 +75,7 @@ function ssh-add-key {
     fi
     haskey=`ssh-add -l | grep "$HOME/.ssh/id_dsa"`
     if [[ x${haskey} = x"" ]]; then
-        ssh-add "$HOME/.ssh/id_rsa";
+        ssh-add "$HOME/.ssh/id_dsa";
     fi
 }
 
