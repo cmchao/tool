@@ -118,21 +118,19 @@ fi
 
 umask 022
 
+#
+# export
+#
+#   common
 export EDITOR="vim"
 export CVS_RSH=ssh
 export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.sh=01;32:*.csh=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tz=01;31:*.rpm=01;31:*.cpio=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.xbm=01;35:*.xpm=01;35:*.png=01;35:*.tif=01;35:'
 export HISTTIMEFORMAT='%F %T '
-
-export GOPATH="$HOME/tool/go"
 export MYTOOL="${HOME}/tool"
 export PATH="${MYTOOL}/bin:/usr/local/go/bin:/opt/arm/install/DS-5-r5p0-13rel0//bin:${HOME}/.vim/bin:$PATH"
-export PERL5LIB="${MYTOOL}/lib/perl5:${MYTOOL}/lib/perl5/site_perl/5.8.7"
-export PYTHONPATH="${MYTOOL}/lib/python"
-export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
 export MANPATH="$MANPATH:/usr/local/share/man:${MYTOOL}/man:${MYTOOL}/share/man"
 export LD_LIBRARY_PATH="${HOME}/tool/lib"
 export TERM=screen
-
 #color manpage
 export PAGER="/usr/bin/less -s"
 export BROWSER="$PAGER"
@@ -143,6 +141,16 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[0;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[0;33m'
+#   go
+export GOPATH="$HOME/tool/go"
+#   git 
+export GIT_EDITOR="vim"
+#   perl
+export PERL5LIB="${MYTOOL}/lib/perl5:${MYTOOL}/lib/perl5/site_perl/5.8.7"
+#   python
+export PYTHONPATH="${MYTOOL}/lib/python"
+#   ruby
+export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
 
 setup-xtools-env;
 
