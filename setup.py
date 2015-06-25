@@ -24,7 +24,7 @@ def setup_bash():
     home = os.getenv("HOME")
 
     cmd = """
-if [ -e $H/.bashrc.private ]; then
+if [ -e $HOME/.bashrc.private ]; then
     . $HOME/.bashrc.private
 fi
     """
