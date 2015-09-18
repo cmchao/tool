@@ -49,7 +49,15 @@ let g:syntastic_loc_list_height = 3
 
 let g:syntastic_asm_checkers = ["aarch64-gcc"]
 let g:syntastic_perl_checkers = ["perlcritic"]
-let g:syntastic_python_checkers = ["pyflakes"]
+let g:syntastic_python_checkers = ["pyflakes", "pylint"]
+
+if filereadable(".pylintrc")
+    let g:syntastic_python_pylint_post_args = '--rcfile=".pylintrc"'
+elseif filereadable("../.pylintrc")
+    let g:syntastic_python_pylint_post_args = '--rcfile="../.pylintrc"'
+elseif filereadable("../../.pylintrc")
+    let g:syntastic_python_pylint_post_args = '--rcfile="../../.pylintrc"'
+endif
 
 
 " Set to auto read when a file is changed from the outside
@@ -112,6 +120,9 @@ set magic "Set magic on, for regular expressions
 set showmatch "Show matching bracets when text indicator is over them
 set mat=2 "How many tenths of a second to blink
 
+set foldmethod=syntax  "alternative : marker/indent
+set foldlevel=0        "default is off
+set foldnestmax=3
 " No sound on errors
 set noerrorbells
 set novisualbell
