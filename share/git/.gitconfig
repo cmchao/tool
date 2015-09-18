@@ -55,6 +55,7 @@
     dic = diff --cached
     praise = blame 
     pull = pull --ff-only
+    sb = submodule
     ver = rev-parse --short
 
 [apply]
