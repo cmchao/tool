@@ -7,4 +7,6 @@ from libstdcxx.v6.printers import register_libstdcxx_printers
 # 5.2.0 script can't work with 4.8.4 gcc
 #register_libstdcxx_printers (None)
 end
+# qemu user SIGUSR1 as periodic timer interrupt
+handle SIGUSR1 noprint nostop
 
