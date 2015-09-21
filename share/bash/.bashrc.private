@@ -221,6 +221,7 @@ alias dim="docker images"
 alias dps="docker ps"
 alias drm="docker rm"
 alias drmi="docker rmi"
+alias drs="docker restart"
 alias drun="docker run"
 alias dst="docker stop"
 
