@@ -184,6 +184,16 @@ alias s="screen"
 alias vd="vimdiff"
 alias vimo="vim -O"
 
+#docker
+alias dk="docker"
+alias dci="docker commit"
+alias dex="docker exec"
+alias dps="docker ps"
+alias drm="docker rm"
+alias drmi="docker rmi"
+alias drun="docker run"
+alias dst="docker stop"
+
 #work
 alias towt="cd ~/work/tmp"
 alias totmp="cd /tmp"
