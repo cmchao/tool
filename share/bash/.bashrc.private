@@ -105,6 +105,8 @@ if [ -z $SSH_AGENT_PID ] && [ -z $SSH_AUTH_SOCK ]; then
   else
     ssh-procure-launch-agent;
   fi;
+elif [ -n $SSH_AGENT_PID ]; then
+    ssh-add-key;
 fi;
 
 set -o vi
