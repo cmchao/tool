@@ -32,6 +32,14 @@ int main(int argc, char *argv[])
 " >> ${hello_name}
 }
 
+function din {
+    if [ -z $1 ]; then
+        echo "need container's name"
+    else
+        docker exec -it $1 /bin/bash
+    fi
+}
+
 function setup-xtools-env {
     xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.arm_toolpath'`
     if [ $? -eq 0 ]; then
@@ -190,6 +198,7 @@ alias vimo="vim -O"
 alias dk="docker"
 alias dci="docker commit"
 alias dex="docker exec"
+alias dim="docker images"
 alias dps="docker ps"
 alias drm="docker rm"
 alias drmi="docker rmi"
