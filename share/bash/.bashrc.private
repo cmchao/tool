@@ -208,3 +208,10 @@ alias dst="docker stop"
 #work
 alias towt="cd ~/work/tmp"
 alias totmp="cd /tmp"
+
+
+# to avoid home is symbolic link issue
+# http://unix.stackexchange.com/questions/37376/bash-prompt-when-my-home-directory-is-a-symbolic-link
+if [[ $PWD == `readlink $HOME` ]]; then
+    cd $HOME
+fi
