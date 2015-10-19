@@ -14,15 +14,15 @@ def find_xtool_dir(path):
     search_list = [path, ]
     new_list = []
 
-    while search_list :
+    while search_list:
 
-        for item in search_list :
+        for item in search_list:
             if os.path.isdir(item):
                 new_list += [item + "/" + new_item for new_item in os.listdir(item)]
 
         del search_list[:]
 
-        for item in new_list :
+        for item in new_list:
             if os.path.isdir(item + "/bin"):
                 select_list.append(item)
             else:
@@ -42,14 +42,14 @@ def find_xtool_bin(path):
     ret = dict()
     prefix = ""
 
-    for root, dirs, names in os.walk(path + "/bin"):
+    for root, _, names in os.walk(path + "/bin"):
         for filename in names:
             for item in pattern.keys():
                 if re.match(item, filename):
                     ret[pattern[item]] = {"path" : os.path.join(root, filename)}
                     if not prefix:
-                        m = re.match('(a.*-.*-.*)-(\w*)', filename)
-                        ret['target'] = m.group(1)
+                        what = re.match(r'(a.*-.*-.*)-(\w*)', filename)
+                        ret['target'] = what.group(1)
 
     if not ret:
         raise Exception('File not found')
@@ -68,8 +68,8 @@ def find_xtool_info(xtool):
         xtool['gcc']['cpu'] = "None"
         xtool['gcc']['fpu'] = "None"
 
-        p1 = subprocess.Popen([xtool['gcc']['path'], "-v"], stderr=subprocess.PIPE)
-        info = p1.communicate()[1].rstrip('\n').split('\n')
+        rmsg = subprocess.Popen([xtool['gcc']['path'], "-v"], stderr=subprocess.PIPE)
+        info = rmsg.communicate()[1].rstrip('\n').split('\n')
 
         version_info = info[-1]
         for line in info:
@@ -77,23 +77,23 @@ def find_xtool_info(xtool):
                 build_info = line
                 break
 
-        m = re.match("gcc version ([\w\.]+) (.+)", version_info)
-        xtool['vendor'] = m.group(2)
-        xtool['gcc']['version'] = m.group(1)
+        what = re.match(r"gcc version ([\w\.]+) (.+)", version_info)
+        xtool['vendor'] = what.group(2)
+        xtool['gcc']['version'] = what.group(1)
 
-        m = re.match(".+ --with-float=(\w+)", build_info)
-        if m:
-            xtool['gcc']['abi'] = m.group(1)
+        what = re.match(r".+ --with-float=(\w+)", build_info)
+        if what:
+            xtool['gcc']['abi'] = what.group(1)
 
-        m = re.match(".+ --with-cpu=(\w+)", build_info)
-        if m:
-            xtool['gcc']['cpu'] = m.group(1)
+        what = re.match(r".+ --with-cpu=(\w+)", build_info)
+        if what:
+            xtool['gcc']['cpu'] = what.group(1)
 
-        m = re.match(".+ --with-fpu=(\w+)", build_info)
-        if m:
-            xtool['gcc']['fpu'] = m.group(1)
-            
-    except:
+        what = re.match(r".+ --with-fpu=(\w+)", build_info)
+        if what:
+            xtool['gcc']['fpu'] = what.group(1)
+
+    except Exception:
         pass
 
 
@@ -101,15 +101,15 @@ def find_xtool_info(xtool):
     try:
         xtool['binutil']['version'] = "None"
 
-        p1 = subprocess.Popen([xtool['binutil']['path'], "-v"], stdout=subprocess.PIPE)
-        p2 = subprocess.Popen(["head", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
-        p1.stdout.close()
+        rmsg1 = subprocess.Popen([xtool['binutil']['path'], "-v"], stdout=subprocess.PIPE)
+        rmsg2 = subprocess.Popen(["head", "-1"], stdin=rmsg1.stdout, stdout=subprocess.PIPE)
+        rmsg1.stdout.close()
 
-        version = p2.communicate()[0].rstrip('\n')
-        m = re.match("(.+) (.+)$", version)
+        version = rmsg2.communicate()[0].rstrip('\n')
+        what = re.match("(.+) (.+)$", version)
 
-        xtool['binutil']['version'] = m.group(2)
-    except:
+        xtool['binutil']['version'] = what.group(2)
+    except Exception:
         pass
 
 
@@ -120,40 +120,40 @@ def find_xtool_info(xtool):
 
         xtool['gdb']['version'] = "None"
 
-        p1 = subprocess.Popen([xtool['gdb']['path'], "-v"], stdout=subprocess.PIPE)
-        p2 = subprocess.Popen(["head", "-1"], stdin = p1.stdout, stdout=subprocess.PIPE)
-        p1.stdout.close()
+        rmsg1 = subprocess.Popen([xtool['gdb']['path'], "-v"], stdout=subprocess.PIPE)
+        rmsg2 = subprocess.Popen(["head", "-1"], stdin=rmsg1.stdout, stdout=subprocess.PIPE)
+        rmsg1.stdout.close()
 
-        version = p2.communicate()[0].rstrip('\n')
-        m = re.match("(.+) (.+)$", version)
+        version = rmsg2.communicate()[0].rstrip('\n')
+        what = re.match("(.+) (.+)$", version)
 
-        xtool['gdb']['version'] = m.group(2)
-    except:
+        xtool['gdb']['version'] = what.group(2)
+    except Exception:
         pass
 
 
 def show_xtool_info(xtools):
-    prefix_len  = max([ len(item['target'])             for item in xtools.values() ])
-    gcc_len     = max([ len(item['gcc']['version'])     for item in xtools.values() ])
-    abi_len     = max([ len(item['gcc']['abi'])         for item in xtools.values() ])
-    vendor_len  = max([ len(item['vendor'])     for item in xtools.values() ])
+    prefix_len  = max([len(item['target'])             for item in xtools.values()])
+    gcc_len     = max([len(item['gcc']['version'])     for item in xtools.values()])
+    abi_len     = max([len(item['gcc']['abi'])         for item in xtools.values()])
+    vendor_len  = max([len(item['vendor'])     for item in xtools.values()])
 
     cell_format = "%%s%%-3s%%-%ds%%-%ds%%-%ds%%-%ds" % (
-                            prefix_len + 1, 
-                            gcc_len + 1, 
+                            prefix_len + 1,
+                            gcc_len + 1,
                             abi_len + 1,
                             vendor_len + 1)
 
     print cell_format % (" ", "", 'Target', 'gcc', "abi", "vendor")
-    idx = 1 
-    for item in sorted(xtools.itervalues(), key=lambda x : x['gcc']['version']):
-        if item['current']: 
+    idx = 1
+    for item in sorted(xtools.itervalues(), key=lambda x: x['gcc']['version']):
+        if item['current']:
             cur_mark = "*"
         else:
             cur_mark = " "
 
-        print cell_format % (cur_mark, idx, 
-                                  item['target'], 
+        print cell_format % (cur_mark, idx,
+                                  item['target'],
                                   item['gcc']['version'],
                                   item['gcc']['abi'],
                                   item['vendor'])
@@ -168,14 +168,14 @@ def search_xtool(lookup_path = None):
     if not lookup_path:
         home = os.getenv('HOME')
         toolpath = os.getenv('TOOLBOX', home + "/tool")
-        if not toolpath :
+        if not toolpath:
             print "can't get home directory"
             exit(1)
 
         xtoolpath = toolpath + "/x-tools"
 
         select_list = find_xtool_dir(xtoolpath)
-            
+
     else:
         if os.path.isdir(lookup_path):
             select_list = [lookup_path, ]
@@ -184,7 +184,7 @@ def search_xtool(lookup_path = None):
     for item in select_list:
         try:
             xtools[item] = find_xtool_bin(item)
-        except:
+        except Exception:
             print 'ignore : ' + item
             continue
 
@@ -194,20 +194,20 @@ def search_xtool(lookup_path = None):
     arm_path = os.getenv('ARM_TOOLPATH')
     aarch64_path = os.getenv('AARCH64_TOOLPATH')
     for item in xtools.keys():
-        if (arm_path and arm_path == item):
+        if arm_path and arm_path == item:
             xtools[item]['current'] = True
-        elif (aarch64_path and aarch64_path == item):
+        elif aarch64_path and aarch64_path == item:
             xtools[item]['current'] = True
         else:
             xtools[item]['current'] = False
-            
+
     return xtools
 
 
 def get_choice(xtools):
     " Get integer input from prompt. 'q' for leave "
 
-    while True :
+    while True:
         try:
             choice = raw_input("Choice [q for quit] : ")
             if choice == 'q':
@@ -245,14 +245,15 @@ def access_config(writedata, option, value = None):
 
     if writedata:
         content.set(catagory, field, value)
-        fp = open(config, "w")
-        content.write(fp)
+        tmpfp = open(config, "w")
+        content.write(tmpfp)
         return value
     else:
-        try :
+        try:
             val = content.get(catagory, field)
-        except:
-            raise Exception("config file doesn't have '%s' field in '%s' section" % (field, catagory))  
+        except Exception:
+            raise Exception(("config file doesn't have '%s'"
+                            "field in '%s' section") % (field, catagory))
         return val
     return None
 
@@ -264,19 +265,19 @@ def parse_argv():
                          "    1. $XTOOL_DIR\n"
                          "    2. $HOME/tool/x-tools\n"))
 
-    parser.add_argument("-l", "--list", 
+    parser.add_argument("-l", "--list",
                         action="store_true", dest="listall", default=False,
                         help="List available toolchain version")
-    parser.add_argument("-d", "--dry", 
+    parser.add_argument("-d", "--dry",
                         action="store_true", dest="dryrun", default=False,
                         help="Don't take an effect")
-    parser.add_argument("-c", "--current", 
+    parser.add_argument("-c", "--current",
                         action="store_true", dest="current", default=False,
                         help="Look up current tool version")
-    parser.add_argument("-o", "--override", 
+    parser.add_argument("-o", "--override",
                         action="store_true", dest="override", default=False,
                         help="Override global config for each new shell")
-    parser.add_argument("-t", "--tmp", 
+    parser.add_argument("-t", "--tmp",
                         action="store_false", dest="override",
                         help="Write path to tempory file, specified by config. "
                              "If the file doesn't exist, generate it")
@@ -321,12 +322,13 @@ def run(cmd_opts):
             elif "aarch64":
                 arch = "aarch64"
             else:
-               print "Unknown arch '%s'" % (arch)
+                print "Unknown arch '%s'" % (arch)
 
             if cmd_opts.dryrun:
                 print "just try run"
             elif cmd_opts.override:
-                ret = access_config(writedata=True, option="xtools.%s_toolpath" % (arch), value=path)
+                ret = access_config(writedata=True,
+                                    option="xtools.%s_toolpath" % (arch), value=path)
                 if ret == path:
                     print "Overrite success"
                 else:
