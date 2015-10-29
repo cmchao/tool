@@ -1,0 +1,46 @@
+From c12abd47f0c12f84ee5bb45511622572580d4fce Mon Sep 17 00:00:00 2001
+From: Chih-Min Chao <cmchao@marvell.com>
+Date: Thu, 29 Oct 2015 18:29:31 +0800
+Subject: [PATCH] jenkin : fix non-xcode environment
+
+Signed-off-by: Chih-Min Chao <cmchao@marvell.com>
+---
+ scan-build | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/scan-build b/scan-build
+index b4fc5ce..2a3b3cf 100755
+--- a/scan-build
++++ b/scan-build
+@@ -1020,7 +1020,8 @@ sub RunXcodebuild {
+ sub RunBuildCommand {
+   my $Args = shift;
+   my $IgnoreErrors = shift;
+-  my $Cmd = $Args->[0];
++  #my $Cmd = $Args->[0];
++  my $Cmd = "make";
+   my $CCAnalyzer = shift;
+   my $CXXAnalyzer = shift;
+   my $Options = shift;
+@@ -1065,7 +1066,9 @@ sub RunBuildCommand {
+     }
+   }
+
+-  return (system(@$Args) >> 8);
++  #return (system(@$Args) >> 8);
++  chdir("scan-build-dir");
++  return (system("make -B") >> 8);
+ }
+
+ ##----------------------------------------------------------------------------##
+@@ -1481,7 +1484,7 @@ while (@ARGV) {
+
+   if ($arg eq "-v") {
+     shift @ARGV;
+-    $Verbose++;
++    #$Verbose++;
+     next;
+   }
+
+--
+1.9.1
