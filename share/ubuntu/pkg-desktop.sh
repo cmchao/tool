@@ -2,7 +2,7 @@
 #set -x
 
 #desktop
-pkg_dev="build-essential vim tig git git-svn cmake tmux clang gcin byobu pyflakes"
+pkg_dev="build-essential vim tig git git-svn cmake gcovr tmux clang gcin byobu pyflakes"
 pkg_dev="$pkg_dev fonts-noto wine byobu keepass2 tree doxygen"
 pkg_sa="aptitude iotop gparted synaptic curl rar iftop htop nfs-common ntp"
 pkg_media="qbittorrent smplayer shutter"
