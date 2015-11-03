@@ -4,7 +4,7 @@
 #desktop
 pkg_dev="build-essential vim tig git git-svn cmake tmux clang gcin byobu pyflakes"
 pkg_dev="$pkg_dev fonts-noto wine byobu keepass2 tree doxygen"
-pkg_sa="aptitude iotop gparted synaptic curl rar iftop htop nfs-common"
+pkg_sa="aptitude iotop gparted synaptic curl rar iftop htop nfs-common ntp"
 pkg_media="qbittorrent smplayer shutter"
 pkg_lib_common="autotools-dev automake libtool"
 pkg_lib_pcman="libglib2.0-dev libgtk2.0-dev libltdl-dev intltool" 
