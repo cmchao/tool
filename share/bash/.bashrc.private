@@ -113,6 +113,9 @@ if [ -z $SSH_AGENT_PID ] && [ -z $SSH_AUTH_SOCK ]; then
   else
     ssh-procure-launch-agent;
   fi;
+# ssh-agent forward
+elif [ -n $SSH_AUTH_SOCK ] && [ x"$SSH_AUTH_SOCK" != x"$AGENT_HOME/ssh-agent-socket" ]; then
+    echo -n "" > /dev/null
 elif [ -n $SSH_AGENT_PID ]; then
     ssh-add-key;
 fi;
