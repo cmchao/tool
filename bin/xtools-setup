@@ -284,8 +284,30 @@ def parse_argv():
 
     return parser.parse_args()
 
+def setup_config():
+    """ create config folder if it doesn't exist """
+
+    config_folder = "%s/.%s-tool" % (os.getenv('HOME'), os.getenv('USER'))
+    config_file = "%s/config" % (config_folder)
+    config_template = ("[xtools]\n"
+                       "arm_toolpath =\n"
+                       "arm_tmp =\n"
+                       "aarch64_toolpath =\n"
+                       "aarch64_tmp =\n")
+
+    if not os.path.exists(config_folder):
+        os.makedirs(config_folder)
+
+    if not os.path.exists(config_file):
+        with open(config_file, "w") as handler:
+            handler.writelines(config_template)
+
 
 def run(cmd_opts):
+    """ main body """
+
+    setup_config()
+
     if cmd_opts.listall:
         xtools = search_xtool()
         show_xtool_info(xtools)
