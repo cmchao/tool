@@ -134,6 +134,7 @@ def find_xtool_info(xtool):
 
 
 def show_xtool_info(xtools):
+    """ search gcc/gdb information in each cross compiler folder """
     prefix_len  = max([len(item['target'])             for item in xtools.values()])
     gcc_len     = max([len(item['gcc']['version'])     for item in xtools.values()])
     abi_len     = max([len(item['gcc']['abi'])         for item in xtools.values()])
@@ -161,7 +162,7 @@ def show_xtool_info(xtools):
         idx += 1
 
 
-def search_xtool(lookup_path = None):
+def search_xtool(lookup_path=None):
     """ find possible xtool in specific dir and get each information for
         gcc/gdb/binutils
     """
@@ -270,6 +271,7 @@ def access_config(writedata, option, value=None):
 
 
 def parse_argv():
+    """ parse command line argument """
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
             description=("cross toolchain setup tool\n"
                          "The tool search config in the following order\n"
