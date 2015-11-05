@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" cross-compiler setup tool """
 import argparse
 import ConfigParser
 import os
@@ -224,7 +225,17 @@ def get_choice(xtools):
     return int(choice)
 
 
-def access_config(writedata, option, value = None):
+def access_config(writedata, option, value=None):
+    """ accsss the section.field in the config file
+
+    Args:
+        writedate : True -> update value
+        option : section.field   ex : xtool.arm_toolchain
+        value : new value if writedata is True
+    Return:
+        None : get nothin
+        value
+    """
     config = os.getenv('HOME') + "/." + os.getenv('USER') + "-tool/config"
     catagory, field = option.split('.')
 
@@ -379,7 +390,7 @@ def run(cmd_opts):
 
 
 if __name__ == "__main__":
-    cmd_opts = parse_argv()
-    run(cmd_opts)
+    CMD_OPTS = parse_argv()
+    run(CMD_OPTS)
 
 
