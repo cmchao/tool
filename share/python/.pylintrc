@@ -5,7 +5,7 @@
 # RPXXXX : unneed verbose message
 # W0511  : Used when a warning note as FIXME or XXX is detected.
 # W0703  : Catching too general exception %s
-disable=RP0801,RP0701,RP0101,RP0001,RP0003,W0511,W0703,C0330,
+disable=RP0801,RP0701,RP0101,RP0001,RP0003,W0511,W0703,C0330
 
 [REPORTS]
 # Set the output format. Available formats are text, parseable, colorized, msvs
@@ -55,6 +55,13 @@ const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
 
 # Bad variable names which should always be refused, separated by a comma
 bad-names=foo,bar,baz,toto,tutu,tata
+
+[DESIGN]
+# Maximum number of branch for function / method body
+max-branches=20
+
+# Maximum number of statements in function / method body
+max-statements=100
 
 [TYPECHECK]
 # List of classes names for which member attributes should not be checked
