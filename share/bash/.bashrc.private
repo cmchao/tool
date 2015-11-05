@@ -231,6 +231,8 @@ alias totmp="cd /tmp"
 
 # to avoid home is symbolic link issue
 # http://unix.stackexchange.com/questions/37376/bash-prompt-when-my-home-directory-is-a-symbolic-link
-if [[ $PWD == `readlink $HOME` ]]; then
-    cd $HOME
+real_home=`readlink $HOME`
+if [[ $PWD == `readlink $HOME`* ]]; then
+    new_path="${PWD/${real_home}/${HOME}}"
+    cd $new_path
 fi
