@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" empty comment """
 import traceback
 
 def run():
+    """ main fucntion """
     pass
 
 
