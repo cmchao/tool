@@ -7,3 +7,6 @@ tags
 *.old
 *.dep
 .*.cmd
+obj
+log
+build*/
