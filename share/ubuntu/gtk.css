@@ -1,0 +1,7 @@
+/* color reference http://html-color-codes.info/ */
+TerminalWindow .notebook tab:active {
+    /* other attribute
+     * color:
+     * font-weight: */
+    background-color: #FA8258
+}
