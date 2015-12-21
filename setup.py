@@ -136,6 +136,11 @@ def setup_misc():
     home = os.getenv("HOME")
     try_link(cur + "/bin/suspend", home + "/tool/bin/")
 
+    config_path = home + "/.config/gtk-3.0/"
+    if not os.path.exists(config_path):
+        os.mkdir(config_path)
+
+    try_link(cur + "/share/ubuntu/gtk.css", config_path)
 
 def setup_all(tools):
     """do all task.  """
@@ -184,7 +189,7 @@ def run():
     for idx, item in enumerate(tools.keys()):
         print "%-2d : %-10s" % (idx + 1, item)
 
-    print "%-2d : %-10s" % (len(tools.keys) + 1, "all")
+    print "%-2d : %-10s" % (len(tools.keys()) + 1, "all")
 
     choice = get_choice(len(tools) + 1)
     if choice >= 0 and choice <= len(tool_name):
