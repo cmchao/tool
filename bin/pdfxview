@@ -20,7 +20,7 @@
 #
 
 # determine the app Winelib library name
-appname="/home/$USER/.wine/drive_c/Program Files/pdfxview/PDFXCview.exe"
+appname="/home/$USER/.wine/drive_c/Program Files/Tracker Software/PDF Viewer//PDFXCview.exe"
 drive=
 if [ $# -ne 0 ]; then drive="z:"; fi
 

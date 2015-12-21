@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" setup script """
 import argparse
 import inspect
 import os
@@ -12,8 +13,8 @@ def try_link(src, dst):
     try:
         os.symlink(src, dst)
         print "[Ok]%s : link '%s' to '%s'" % (caller, src, dst)
-    except OSError as e:
-        print "[Skip]%s : link '%s' to '%s' (%s)" % (caller, src, dst, e.strerror)
+    except OSError as exp:
+        print "[Skip]%s : link '%s' to '%s' (%s)" % (caller, src, dst, exp.strerror)
 
 
 def setup_bash():
@@ -52,7 +53,7 @@ fi
             print "[OK]%s : insernt source .bashrc.private to ~/.profile" % (selfname)
             try_link(cur + "/share/bash/.bashrc.private", home + "/.bashrc.private")
     else:
-        print "[ERROR]%s : can't find '.profile' or '.bashrc.private'" % ( selfname)
+        print "[ERROR]%s : can't find '.profile' or '.bashrc.private'" % (selfname)
         return
 
 
@@ -60,7 +61,7 @@ def setup_xtool():
     """ setup xtool """
 
     arch_list = ["arm", "aarch64"]
-    tool_list = [ 
+    tool_list = [
                 "addr2line",
                 "ar",
                 "as",
@@ -147,7 +148,7 @@ def setup_all(tools):
 def get_choice(max_choice):
     " Get integer input from prompt. 'q' for leave "
 
-    while True :
+    while True:
         try:
             choice = raw_input("Choice [q for quit] : ")
             if choice == 'q':
@@ -165,6 +166,7 @@ def get_choice(max_choice):
 
 
 def parse_argv():
+    """ parse command line option """
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
             description=("Setup our Ubuntu working environment\n"
                          "Please execute the '%s' in this directory\n") % sys.argv[0])
@@ -173,15 +175,16 @@ def parse_argv():
 
 
 def run():
+    """ main function """
     tool_name = ["bash", "xtool", "python", "vim", "git", "gdb", "misc"]
-    tool_callback = [setup_bash, setup_xtool, setup_python, 
+    tool_callback = [setup_bash, setup_xtool, setup_python,
                      setup_vim, setup_git, setup_gdb, setup_misc]
     tools = dict(zip(tool_name, tool_callback))
 
     for idx, item in enumerate(tools.keys()):
         print "%-2d : %-10s" % (idx + 1, item)
-    else:
-        print "%-2d : %-10s" % (idx + 2, "all")
+
+    print "%-2d : %-10s" % (len(tools.keys) + 1, "all")
 
     choice = get_choice(len(tools) + 1)
     if choice >= 0 and choice <= len(tool_name):
@@ -193,7 +196,7 @@ def run():
         sys.exit(0)
 
 
-if __name__ ==  "__main__":
+if __name__ == "__main__":
     parse_argv()
     run()
 
