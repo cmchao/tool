@@ -8,7 +8,7 @@ for item in $ppa_all; do
 done
 
 #desktop
-pkg_dev="build-essential vim tig git git-svn cmake gcovr tmux clang byobu"
+pkg_dev="build-essential vim tig git git-svn cmake gcovr tmux clang byobu texinfo"
 pkg_dev="$pkg_dev fonts-noto wine byobu keepass2 tree doxygen"
 pkg_sa="aptitude iotop gparted synaptic curl iftop htop nfs-common ntp"
 pkg_compress="rar pxz dictzip"
