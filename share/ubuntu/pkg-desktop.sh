@@ -7,6 +7,13 @@ for item in $ppa_all; do
     sudo add-apt-repository $item
 done
 
+#add i386 support
+#reference : http://askubuntu.com/questions/454253/how-to-run-32-bit-app-in-ubuntu-64-bit
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
+
+
 #desktop
 pkg_dev="build-essential vim tig git git-svn cmake gcovr tmux clang byobu texinfo"
 pkg_dev="$pkg_dev fonts-noto wine byobu keepass2 tree doxygen"
