@@ -84,10 +84,10 @@
     default = tracking
 
 [hooks]
-    indent = /home/cmchao/tool/bin/astyle
+    indent =
 
 [color]
-	ui = auto
+    ui = auto
 
 [format]
     signoff = true
