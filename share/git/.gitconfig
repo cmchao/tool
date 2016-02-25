@@ -57,6 +57,7 @@
     pull = pull --ff-only
     sb = submodule
     ver = rev-parse --short
+    wt = worktree
     wta = worktree add
     wtp = worktree prune
 
