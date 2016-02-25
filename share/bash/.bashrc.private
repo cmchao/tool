@@ -213,6 +213,8 @@ alias rm="rm -i"
 alias s="screen"
 alias vd="vimdiff"
 alias vimo="vim -O"
+alias wea114="curl -4 wttr.in/Taipei"
+alias wea300="curl -4 wttr.in/Hsinchu"
 
 #docker
 alias dk="docker"
