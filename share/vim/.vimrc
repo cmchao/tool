@@ -50,6 +50,7 @@ let g:syntastic_loc_list_height = 3
 let g:syntastic_asm_checkers = ["aarch64-gcc"]
 let g:syntastic_perl_checkers = ["perlcritic"]
 let g:syntastic_python_checkers = ["pyflakes", "pylint"]
+let g:ycm_confirm_extra_conf = 0
 
 if filereadable(".pylintrc")
     let g:syntastic_python_pylint_post_args = '--rcfile=".pylintrc"'
