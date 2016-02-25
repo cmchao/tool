@@ -3,22 +3,26 @@
 # Hook used to indent *.cpp *.c *.h before commiting
 #
 INDENT="$(git config hooks.indent)"
-if test ! -x "$INDENT"
-then
-    echo "Unable to find indent executable on the configuration."
+if [ -e "$INDENT" ]; then
+    INDENT="/usr/bin/astyle"
+fi
+
+if [ ! -x "$INDENT" ]; then
+    echo "error : unable to find indent executable in the gitconfig or /usr/bin/astyle."
     echo
-    echo "Please configure it with :"
-    echo "  git config hooks.indent C:/path/to/indent"
+    echo "please configure it with :"
+    echo "    git config hooks.indent /home/user/path/to/indent"
+    echo "or"
+    echo "    sudo apt-get install astyle"
     echo
+    exit 1
+fi
+
+INDENT_VERSION=`$INDENT --version 2>&1 | cut -f 4 -d ' ' | cut -c 1`
+if [ x$INDENT_VERSION = x"2" ]; then
+    INDENT_ARGUMENT="--add-brackets --align-pointer=name --convert-tabs --style=otbs --indent=spaces=4 --pad-oper --pad-header --unpad-paren --lineend=linux --suffix=none --indent-col1-comments"
 else
-    INDENT_VERSION=`$INDENT --version 2>&1 | cut -f 4 -d ' ' | cut -c 1`
-    if [ x$INDENT_VERSION = x"1" ]; then
-        INDENT_ARGUMENT="--style=allman --indent=spaces=4 --pad-oper --brackets=break --suffix=none --quiet"
-    elif [ x$INDENT_VERSION = x"2" ]; then
-        INDNET_ARGUMENT="--style=allman --indent=spaces=4 --indent-col1-comments --pad-oper --pad-header --add-brackets --suffix=none --quiet"
-    else
-        INDENT=""
-    fi
+    echo "please install 'astyle' version 2.0x"
 fi
 
 # indent / format file by type
@@ -65,9 +69,24 @@ __indent_C() {
         return;
     fi
 
+    #blacklist example
+    #if [[ $file == *src/disas/* ]]; then
+    #    return
+    #elif [[ $file ==  *src/util/lz4.* ]]; then
+    #    return
+    #elif [[ $file ==  *src/util/lz4hc.* ]]; then
+    #    return
+    #elif [[ $file ==  *src/verify/v8/csim_interface_v8.h ]]; then
+    #    return
+    #fi
+
     echo "Indenting " $file
-    $INDENT $INDENT_ARGUMENT $file
-    git add "$file"
+    rmsg=`$INDENT $INDENT_ARGUMENT $file`
+
+    if [[ $rmsg =~ ^Formatted  ]]; then
+        echo "error : $file is formatted. please re-add it"
+        exit 1
+    fi
 }
 
 indent
