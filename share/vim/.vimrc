@@ -32,7 +32,10 @@ Plugin 'tpope/vim-surround'
 Plugin 'Valloric/YouCompleteMe'
 "   general lint
 Plugin 'scrooloose/syntastic'
-
+"   folder based syntax rule
+Plugin 'thinca/vim-localrc'
+"   turn on ascii color 
+Plugin 'jbnicolai/vim-AnsiEsc'
 """""""""""""""""""""""""""""
 " Plugin Setting
 " scrooloose/syntastic checker "
@@ -59,6 +62,9 @@ elseif filereadable("../.pylintrc")
 elseif filereadable("../../.pylintrc")
     let g:syntastic_python_pylint_post_args = '--rcfile="../../.pylintrc"'
 endif
+
+" local rc
+call localrc#load('.local.vimrc', getcwd())
 
 
 " Set to auto read when a file is changed from the outside
