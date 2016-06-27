@@ -34,7 +34,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
 "   folder based syntax rule
 Plugin 'thinca/vim-localrc'
-"   turn on ascii color 
+"   turn on ascii color
 Plugin 'jbnicolai/vim-AnsiEsc'
 """""""""""""""""""""""""""""
 " Plugin Setting
@@ -120,7 +120,7 @@ set smartcase
 set hlsearch "Highlight search things
 
 set incsearch "Make search act like search in modern browsers
-set nolazyredraw "Don't redraw while executing macros 
+set nolazyredraw "Don't redraw while executing macros
 
 set magic "Set magic on, for regular expressions
 
