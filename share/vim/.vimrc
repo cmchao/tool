@@ -36,6 +36,12 @@ Plugin 'scrooloose/syntastic'
 Plugin 'thinca/vim-localrc'
 "   turn on ascii color
 Plugin 'jbnicolai/vim-AnsiEsc'
+" search and display information from arbitrary sources
+" like files, buffers, recently used files
+Plugin 'Shougo/unite.vim'
+" Required by unite.vim
+Plugin 'Shougo/vimproc.vim'
+
 """""""""""""""""""""""""""""
 " Plugin Setting
 " scrooloose/syntastic checker "
@@ -63,6 +69,8 @@ elseif filereadable("../../.pylintrc")
     let g:syntastic_python_pylint_post_args = '--rcfile="../../.pylintrc"'
 endif
 
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
 " local rc
 call localrc#load('.local.vimrc', getcwd())
 
@@ -83,6 +91,10 @@ nmap <leader>qa :qa!<cr>
 nmap <leader>s  :%s/\s\+$//<cr>
 nmap <leader>m  :%s///<cr>
 nmap <leader>d  :diffu<cr>
+
+" unite
+nmap <leader>f :Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
+nmap <leader>b :Unite -no-split -buffer-name=buffer  buffer<cr>
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc
@@ -300,7 +312,7 @@ if exists("syntax_on")
   hi Type                        ctermfg=LightGreen guifg=grey    gui=none
   hi Error        term=reverse   ctermbg=Red    ctermfg=White guibg=Red guifg=White
   hi Todo         term=standout  ctermbg=Yellow ctermfg=Black guifg=Blue guibg=Yellow
-  
+
   " From the source:
   hi Cursor                                         guifg=Orchid  guibg=fg
   hi Directory    term=bold      ctermfg=LightCyan  guifg=Cyan
