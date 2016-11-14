@@ -97,6 +97,9 @@ nmap <leader>d  :diffu<cr>
 nmap <leader>f :Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
 nmap <leader>b :Unite -no-split -buffer-name=buffer  buffer<cr>
 
+" write file as root
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc
 
