@@ -11,6 +11,7 @@ filetype plugin on
 filetype indent on
 au BufNewFile,BufRead *.dml set filetype=dml
 au BufNewFile,BufRead *.go set filetype=go
+au BufNewFile,BufRead *.sls set filetype=sls
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vundle management
