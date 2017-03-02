@@ -140,7 +140,7 @@ export CVS_RSH=ssh
 export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.sh=01;32:*.csh=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tz=01;31:*.rpm=01;31:*.cpio=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.xbm=01;35:*.xpm=01;35:*.png=01;35:*.tif=01;35:'
 export HISTTIMEFORMAT='%F %T '
 export MYTOOL="${HOME}/tool"
-export PATH="${MYTOOL}/bin:/usr/local/go/bin:/opt/arm/install/DS-5-r5p0-13rel0//bin:${HOME}/.vim/bin:$PATH"
+export PATH="${MYTOOL}/bin:/usr/local/go/bin:/opt/tool/armcc/ARMCompiler5.06u4/bin:${HOME}/.vim/bin:$PATH"
 export MANPATH="$MANPATH:/usr/local/share/man:${MYTOOL}/man:${MYTOOL}/share/man"
 export LD_LIBRARY_PATH="${HOME}/tool/lib"
 export TERM=screen
@@ -197,7 +197,8 @@ alias cvsrip="perl -pi -e \"s/^cvs update: .*\n//\""
 alias gnb="grep -E -R -n --binary-files=without-match --exclude=\"tags\""
 alias gcsize="du -sh ./.git && git gc && du -sh ./.git"
 alias m="less -R"
-alias makearm="make ARCH=arm CROSS_COMPILE=arm-"
+alias marm="make ARCH=arm CROSS_COMPILE=arm-"
+alias marm64="make ARCH=arm64 CROSS_COMPILE=aarch64-"
 alias makelog="rm -rf log && make 2>&1 | tee log"
 alias mlog4="make -j4 2>&1 | tee log"
 alias mcm="make clean && make"
