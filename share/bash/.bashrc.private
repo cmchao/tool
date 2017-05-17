@@ -40,6 +40,15 @@ function din {
     fi
 }
 
+function mkcd {
+    if [ -z $1 ]; then
+        echo "need path"
+    else
+	mkdir -p $1 && cd $1
+    fi
+}
+
+
 function setup-xtools-env {
     xtoolpath=`config-query $HOME/.cmchao-tool/config 'xtools.arm_toolpath'`
     if [ $? -eq 0 ]; then
