@@ -10,3 +10,4 @@ tags
 obj
 log
 build*/
+.local.vimrc
