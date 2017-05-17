@@ -52,8 +52,8 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_perl_checker = 1
 let g:syntastic_loc_list_height = 3
 
@@ -205,6 +205,10 @@ let hexmode = 0
 map <leader>x  :%!xxd <cr>
 map <leader>nx :%!xxd -r<cr>
 map <leader>p  :call TooglePaste()<cr>
+
+"syntastic oo/off
+nnoremap <leader>v :SyntasticCheck<cr>
+nnoremap <leader>nv :SyntasticReset<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs and buffers

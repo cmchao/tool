@@ -60,6 +60,7 @@
     wt = worktree
     wta = worktree add
     wtp = worktree prune
+    perm-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
 
 [apply]
     whitespace = strip
