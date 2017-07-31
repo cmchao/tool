@@ -151,7 +151,7 @@ set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
-set colorcolumn=100
+set colorcolumn=80
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
