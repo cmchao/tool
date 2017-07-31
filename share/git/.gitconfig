@@ -32,6 +32,7 @@
     sd = svn dcommit
     st = status -s
     sta = stash apply
+    stp = stash pop
     rb = rebase
     rbi = rebase -i
     rb2 = rebase -i HEAD~2
@@ -61,9 +62,6 @@
     wta = worktree add
     wtp = worktree prune
     perm-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
-
-[apply]
-    whitespace = strip
 
 [diff]
     color = auto
