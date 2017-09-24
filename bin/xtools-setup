@@ -2,33 +2,12 @@
 
 """ cross-compiler setup tool """
 import argparse
-import ConfigParser
+import json
 import os
 import re
 import subprocess
 import sys
 import tempfile
-
-def find_xtool_dir(path):
-    """ find all valid x-tool direcotory under specific path
-        Only search 8 level in the path
-    """
-
-
-    cmd = 'find %s/ -maxdepth 8 -name "*-*-*-*" -type d' % (path)
-    rmsg = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    candidate = rmsg.communicate()[0].rstrip('\n').split('\n')
-
-    search_list = []
-    for item in candidate:
-        bin_path = "%s/bin" % (item)
-        include_path = "%s/include" % (item)
-
-        if os.path.isdir(bin_path) and os.path.isdir(include_path):
-            search_list.append(item)
-
-    return search_list
-
 
 def find_xtool_bin(path):
     """ find target name, gcc/gdb/readelf path for specific xtool dir """
@@ -158,28 +137,11 @@ def show_xtool_info(xtools):
         idx += 1
 
 
-def search_xtool(lookup_path=None):
-    """ find possible xtool in specific dir and get each information for
-        gcc/gdb/binutils
+def search_xtool(xtools_path):
+    """  For each xtool,  get each information for gcc/gdb/binutils
     """
-
-    if not lookup_path:
-        home = os.getenv('HOME')
-        toolpath = os.getenv('TOOLBOX', home + "/tool")
-        if not toolpath:
-            print "can't get home directory"
-            exit(1)
-
-        xtoolpath = toolpath + "/x-tools"
-
-        select_list = find_xtool_dir(xtoolpath)
-
-    else:
-        if os.path.isdir(lookup_path):
-            select_list = [lookup_path, ]
-
     xtools = dict()
-    for item in select_list:
+    for item in xtools_path:
         try:
             xtools[item] = find_xtool_bin(item)
         except Exception:
@@ -222,50 +184,6 @@ def get_choice(xtools):
     return int(choice)
 
 
-def access_config(writedata, option, value=None):
-    """ accsss the section.field in the config file
-
-    Args:
-        writedate : True -> update value
-        option : section.field   ex : xtool.arm_toolchain
-        value : new value if writedata is True
-    Return:
-        None : get nothin
-        value
-    """
-    config = os.getenv('HOME') + "/." + os.getenv('USER') + "-tool/config"
-    catagory, field = option.split('.')
-
-    if writedata and value == None:
-        raise Exception("Invalid value for write")
-
-    if not os.path.exists(config):
-        raise Exception("config directory (%s) doesn't exist" % config)
-
-    content = ConfigParser.SafeConfigParser()
-    try:
-        content.read(config)
-    except:
-        raise Exception("parse %s config error" % config)
-
-    if not content.has_section(catagory):
-        raise Exception("config file doesn't have '%s' section" % catagory)
-
-    if writedata:
-        content.set(catagory, field, value)
-        tmpfp = open(config, "w")
-        content.write(tmpfp)
-        return value
-    else:
-        try:
-            val = content.get(catagory, field)
-        except Exception:
-            raise Exception(("config file doesn't have '%s'"
-                            "field in '%s' section") % (field, catagory))
-        return val
-    return None
-
-
 def parse_argv():
     """ parse command line argument """
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
@@ -293,80 +211,131 @@ def parse_argv():
 
     return parser.parse_args()
 
-def setup_config():
-    """ create config folder if it doesn't exist """
+def setup_config(config=None):
+    """ get and update information from tool folder to private configuration file
+        if not existed, create a template
+    """
 
     config_folder = "%s/.%s-tool" % (os.getenv('HOME'), os.getenv('USER'))
-    config_file = "%s/config" % (config_folder)
-    config_template = ("[xtools]\n"
-                       "arm_toolpath =\n"
-                       "arm_tmp =\n"
-                       "aarch64_toolpath =\n"
-                       "aarch64_tmp =\n")
+    config_file = "%s/config.json" % (config_folder)
 
+    config_template = {"xtools" :
+                        {"list_path": "/opt/config.json",
+                         "arch": ["arm", "aarch64"],
+                         "arm": {
+                             "toolpath":  "",
+                             "tmp": "",
+                             "toollist": [],
+                         },
+                         "aarch64": {
+                             "toolpath": "",
+                             "tmp": "",
+                             "toollist": []
+                         }
+                        }
+                      }
+
+
+    # update path
+    if config:
+        with open(config_file, "w") as handler:
+            json.dump(config, handler, indent=4)
+
+        return config
+
+
+    # normal path
+    config = {}
     if not os.path.exists(config_folder):
         os.makedirs(config_folder)
 
-    if not os.path.exists(config_file):
-        with open(config_file, "w") as handler:
-            handler.writelines(config_template)
+    if os.path.exists(config_file):
+        with open(config_file, "r") as handler:
+            config = json.load(handler)
+    else:
+        config = config_template
+
+    tool_config_path = config["xtools"]["list_path"]
+    if os.path.exists(tool_config_path):
+        with open(tool_config_path, "r") as handler:
+            tool_config = json.load(handler)
+
+            arch = config["xtools"]["arch"]
+
+            for item in arch:
+                toollist = "%s_toollist" % item
+                toolpath = "%s_toolpath" % item
+
+                config["xtools"][toollist] = tool_config["xtools"][toollist]
+                if not config["xtools"][toolpath]:
+                    config["xtools"][toolpath] = tool_config["xtools"][toolpath]
+
+    with open(config_file, "w") as handler:
+        json.dump(config, handler, indent=4)
+
+
+    return config
 
 
 def run(cmd_opts):
     """ main body """
 
-    setup_config()
+    config = setup_config()
+
+    all_tools = []
+    for arch in config["xtools"]["arch"]:
+        for key, val in config["xtools"].items():
+            if key == arch:
+                all_tools += val["toollist"]
 
     if cmd_opts.listall:
-        xtools = search_xtool()
-        show_xtool_info(xtools)
+        xtools = search_xtool(all_tools)
+        if not xtools:
+            print "no available xtool"
+        else:
+            show_xtool_info(xtools)
 
         sys.exit(0)
 
     if cmd_opts.current:
-        ret = access_config(writedata=False, option="xtools.arm_toolpath")
-        xtools = search_xtool(ret)
-
-        print "arm x-tool"
-        show_xtool_info(xtools)
-
-        print "\naarch64 x-tool"
-        ret = access_config(writedata=False, option="xtools.aarch64_toolpath")
-        xtools = search_xtool(ret)
-
-        show_xtool_info(xtools)
+        for arch in config["xtools"]["arch"]:
+            for key, val in config["xtools"].items():
+                if key == arch:
+                    target = [val["toolpath"], ]
+                    xtools = search_xtool(target)
+                    show_xtool_info(xtools)
 
         sys.exit(0)
 
     if cmd_opts.dryrun or cmd_opts.override or not cmd_opts.override:
-        xtools = search_xtool()
+        xtools = search_xtool(all_tools)
         show_xtool_info(xtools)
         choice = get_choice(xtools)
+        update = False
 
         if choice:
             choice = int(choice) - 1
             path = sorted(xtools.keys(), key=lambda x: xtools[x]['gcc']['version'])[choice]
 
             basename = os.path.basename(path)
-            if "arm" in basename:
-                arch = "arm"
-            elif "aarch64":
-                arch = "aarch64"
+            arch = ""
+            for key in config["xtools"]["arch"]:
+                if key in basename:
+                    arch = key
+                    break
             else:
-                print "Unknown arch '%s'" % (arch)
+                print "unknown arch '%s'" % (arch)
+                sys.exit(1)
 
             if cmd_opts.dryrun:
-                print "just try run"
+                print "just try run. setup this %s" % (path)
             elif cmd_opts.override:
-                ret = access_config(writedata=True,
-                                    option="xtools.%s_toolpath" % (arch), value=path)
-                if ret == path:
-                    print "Overrite success"
-                else:
-                    print "Overrite fail"
+                config["xtools"][arch]["toolpath"] = path
+                update = True
+
+                print "overrite success"
             else:
-                ini_field = "xtools.%s_tmp" % (arch)
-                tmppath = access_config(writedata=False, option=ini_field)
+                tmppath = config["xtools"][arch]["tmp"]
                 if not tmppath or not os.path.exists(tmppath):
                     tmpfp, tmppath = tempfile.mkstemp()
                     tmpfp = os.fdopen(tmpfp, "w")
@@ -375,9 +344,12 @@ def run(cmd_opts):
                     tmpfp.seek(0, 2)
 
                 tmpfp.write(path + "\n")
-                access_config(writedata=True, option=ini_field, value=tmppath)
+                config["xtools"][arch]["tmp"] = tmppath
                 tmpfp.close()
-                print "Tempory write  success"
+                update = True
+
+            if update:
+                setup_config(config)
 
         sys.exit(0)
 
