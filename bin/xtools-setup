@@ -208,6 +208,9 @@ def parse_argv():
                         action="store_false", dest="override",
                         help="Write path to tempory file, specified by config. "
                              "If the file doesn't exist, generate it")
+    parser.add_argument("-e", "--env",
+                        type=str, dest="env", choices=['current', 'tmp'], default=None,
+                        help="print bash export statement for shell setup")
 
     return parser.parse_args()
 
@@ -304,6 +307,30 @@ def run(cmd_opts):
                     target = [val["toolpath"], ]
                     xtools = search_xtool(target)
                     show_xtool_info(xtools)
+
+        sys.exit(0)
+
+    if cmd_opts.env:
+        for arch in config["xtools"]["arch"]:
+            for key, val in config["xtools"].items():
+                if key == arch:
+                    env_name = ""
+                    if cmd_opts.env == "current":
+                        env_name = "export %s_TOOLPATH=\"%s\"" % (key.upper(), val["toolpath"])
+                    elif cmd_opts.env == "tmp":
+                        if os.path.exists(val["tmp"]):
+                            toolpath = ""
+                            with open(val["tmp"]) as handler:
+                                toolpath = handler.readline().rstrip("\n")
+
+                            env_name = "export %s_TOOLPATH=\"%s\"" % (key.upper(), toolpath)
+                        else:
+                            continue
+                    else:
+                        # have been checked in argparse
+                        pass
+
+                    print env_name
 
         sys.exit(0)
 
