@@ -42,6 +42,8 @@ Plugin 'jbnicolai/vim-AnsiEsc'
 Plugin 'Shougo/unite.vim'
 " Required by unite.vim
 Plugin 'Shougo/vimproc.vim'
+" salt syntax
+Plugin 'saltstack/salt-vim'
 
 """""""""""""""""""""""""""""
 " Plugin Setting
