@@ -13,7 +13,7 @@
     bib = bisect bad
     big = bisect good
     ce = cvsexportcommit -c
-    ci = commit
+    ci = commit --signoff
     cia = commit -a
     cio = commit -o
     ca = commit --amend
