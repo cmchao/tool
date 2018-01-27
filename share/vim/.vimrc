@@ -44,6 +44,8 @@ Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimproc.vim'
 " salt syntax
 Plugin 'saltstack/salt-vim'
+" a tool to bind different formatter
+Plugin 'Chiel92/vim-autoformat'
 
 """""""""""""""""""""""""""""
 " Plugin Setting
@@ -199,6 +201,32 @@ set tags=./tags,../tags,../../tags,../../../tags
 
 let g:clang_use_library = 1
 let g:clang_library_path = '/usr/lib'
+
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => formatter
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" auto-fomrmat : ptyhon
+" copy from default.vim in auto-format repo since I don't want to export
+" PYTHONLIB path
+let g:formatters_python = ['yapf']  "siable autopep8
+let s:configfile_def   = "'python /usr/local/lib/python2.7/dist-packages/yapf -l '.a:firstline.'-'.a:lastline"
+let s:noconfigfile_def = "'python /usr/local/lib/python2.7/dist-packages/yapf --style=\"{based_on_style:'.g:formatter_yapf_style.',indent_width:'.&shiftwidth.(&textwidth ? ',column_limit:'.&textwidth : '').'}\" -l '.a:firstline.'-'.a:lastline"
+let g:formatdef_yapf   = "g:YAPFFormatConfigFileExists() ? (" . s:configfile_def . ") : (" . s:noconfigfile_def . ")"
+
+" auto-fomrmat : ptyhon
+let g:formatters_cpp = ['clangformat'] "disable astyle
+
+" auto-fomrmat : enabling key mapping
+map <C-k> :Autoformat<CR>
+imap <C-k> <ESC>:Autoformat<CR>
+
+" debug
+" let g:autoformat_verbosemode=1
+
+
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
