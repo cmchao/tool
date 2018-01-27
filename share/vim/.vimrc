@@ -256,12 +256,6 @@ map <right> :bn<cr>
 map <left> :bp<cr>
 nmap <leader>c :b#<bar>bd#<cr>
 
-" Smart way to move btw. windows
-"map <C-j> <C-W>j
-"map <C-k> <C-W>k
-"map <C-h> <C-W>h
-"map <C-l> <C-W>l
-
 " Tab configuration
 map <leader>tn :tabnew<cr>
 map <leader>te :tabedit
