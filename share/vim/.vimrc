@@ -257,10 +257,10 @@ map <left> :bp<cr>
 nmap <leader>c :b#<bar>bd#<cr>
 
 " Smart way to move btw. windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
 
 " Tab configuration
 map <leader>tn :tabnew<cr>
@@ -331,6 +331,30 @@ if exists("+showtabline")
      set tabline=%!MyTabLine()
 endif
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+"        session
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+"fu! SaveSess()
+"  execute 'mksession! ' . getcwd() . '/.session.vim'
+"endfunction
+"
+"fu! RestoreSess()
+"  if filereadable(getcwd() . '/.session.vim')
+"    execute 'so ' . getcwd() . '/.session.vim'
+"    if bufexists(1)
+"      for l in range(1, bufnr('$'))
+"        if bufwinnr(l) == -1
+"          exec 'sbuffer ' . l
+"        endif
+"      endfor
+"    endif
+"  endif
+"endfunction
+"
+"autocmd VimLeave * call SaveSess()
+"autocmd VimEnter * nested call RestoreSess()
+"
+"set sessionoptions-=options  " Don't save options
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
 "        color block
