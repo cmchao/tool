@@ -32,6 +32,8 @@
     sd = svn dcommit
     st = status -s
     sta = stash apply
+    std = stash drop
+    stl = stash list
     stp = stash pop
     rb = rebase
     rbi = rebase -i
