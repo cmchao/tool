@@ -10,3 +10,4 @@ end
 # qemu user SIGUSR1 as periodic timer interrupt
 handle SIGUSR1 noprint nostop
 
+set backtrace limit 12
