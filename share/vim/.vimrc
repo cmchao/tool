@@ -29,8 +29,6 @@ Plugin 'gmarik/vundle'
 
 " Plugins
 Plugin 'tpope/vim-surround'
-"   auto complete
-Plugin 'Valloric/YouCompleteMe'
 "   general lint
 Plugin 'scrooloose/syntastic'
 "   folder based syntax rule
