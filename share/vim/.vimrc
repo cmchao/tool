@@ -299,6 +299,9 @@ function! TooglePaste()
     endif
 endfunction
 
+if $DISPLAY =~ '\(\(cos\|scs\)\d\+nai\d\+\)\|\(spkpc\d\+\)\|\(tc-garyjohn\)' 
+    set clipboard=autoselect,exclude:.* 
+endif 
 
 set guioptions-=e
 
