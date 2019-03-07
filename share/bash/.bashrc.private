@@ -48,18 +48,6 @@ function mkcd {
     fi
 }
 
-
-function setup-xtools {
-    if [[ x$1 = x"current" ]]; then
-        eval `xtools-setup --env $1`
-    elif [[ x$1 = x"tmp" ]]; then
-        xtools-setup -t
-        eval `xtools-setup --env $1`
-    else
-        echo "unsupported val"
-    fi
-}
-
 tmux_winidx() {
     if [ $TMUX ]; then
         tmp_winidx=`tmux display-message -p '#I'`
@@ -173,8 +161,6 @@ export PERL5LIB="${MYTOOL}/lib/perl5:${MYTOOL}/lib/perl5/site_perl/5.8.7"
 export PYTHONPATH="${MYTOOL}/lib/python"
 #   ruby
 export RUBYLIB="${MYTOOL}/lib64/site_ruby/"
-
-setup-xtools "current";
 
 alias cd2="cd ../../"
 alias cd3="cd ../../../"
