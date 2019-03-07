@@ -225,3 +225,16 @@ if [[ $PWD == `readlink $HOME`* ]]; then
     new_path="${PWD/${real_home}/${HOME}}"
     cd $new_path
 fi
+
+
+#handle module path if it is installed in default
+if [ -f /usr/share/modules/init/bash ] && [ ! -z "$MODULEPATH" ]; then
+    . /usr/share/modules/init/bash
+fi
+
+if [ ! -z "$MODULEPATH" ]; then
+    export MODULEPATH="$HOME/modulefiles:$MODULEPATH"
+fi
+
+export PATH=$(printf %s "$PATH" | awk -vRS=: '!a[$0]++' | paste -s -d:)
+    
