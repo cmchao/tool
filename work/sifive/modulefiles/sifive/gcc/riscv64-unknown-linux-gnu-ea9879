@@ -1,0 +1,19 @@
+#%Module1.0#####################################################################
+##
+## modules modulefile
+##
+## modulefiles/modules.  Generated from modules.in by configure.
+##
+proc ModulesHelp { } {
+        puts stderr "\tcv64-unknown-linux-gnu-ea9879 setup bin path "
+}
+
+module-whatis	"loads the modules environment for riscv64-unknown-linux-gnu-ea9879"
+
+# for Tcl script use only
+set	version		riscv64-unknown-linux-gnu-ea9879
+set     pkg             gcc
+set     platform        x86_64-linux-ubuntu14
+set     topdir          /opt/sifive/$pkg/$version-$platform
+
+prepend-path    --delim ":"     PATH            $topdir/bin
