@@ -1,0 +1,23 @@
+#%Module1.0#####################################################################
+##
+## modules modulefile
+##
+## modulefiles/modules.  Generated from modules.in by configure.
+##
+proc ModulesHelp { } {
+        puts stderr "\tprotobuf-3.5.1: setup and library and include path "
+}
+
+module-whatis	"loads the modules environment for protobuf-3.5.1"
+
+# for Tcl script use only
+set	version		3.5.1
+set     pkg             protobuf
+set     topdir          /home/cmchao/modules/pkg/$pkg/$version
+
+prepend-path    --delim " "     CPPFLAGS        "-I$topdir/include"
+prepend-path    --delim " "     CXXFLAGS        "-I$topdir/include"
+prepend-path    --delim ":"     LIBRARY_PATH    $topdir/lib
+prepend-path    --delim ":"     LD_LIBRARY_PATH $topdir/lib
+prepend-path    --delim ":"     PKG_CONFIG_PATH $topdir/lib/pkgconfig
+prepend-path    --delim ":"     PATH            $topdir/bin

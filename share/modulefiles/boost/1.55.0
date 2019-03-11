@@ -1,0 +1,22 @@
+#%Module1.0#####################################################################
+##
+## modules modulefile
+##
+## modulefiles/modules.  Generated from modules.in by configure.
+##
+proc ModulesHelp { } {
+        global version prefix
+
+        puts stderr "\tboost-1.55.0: setup and library and include path "
+}
+
+module-whatis	"loads the modules environment for boost-1.55.0"
+
+# for Tcl script use only
+set	version		1.55.0
+set     pkg             boost
+set     topdir          /home/cmchao/modules/pkg/$pkg/$version
+
+prepend-path    --delim " "     CXXFLAGS        "-I$topdir/include"
+prepend-path    --delim ":"     LIBRARY_PATH    $topdir/lib
+prepend-path    --delim ":"     LD_LIBRARY_PATH $topdir/lib
