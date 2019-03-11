@@ -59,6 +59,7 @@
     praise = blame 
     pull = pull --ff-only
     sb = submodule
+    sbuir = submodule update --init --recursive
     ver = rev-parse --short
     wt = worktree
     wta = worktree add

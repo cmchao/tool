@@ -17,3 +17,5 @@ set     platform        x86_64-linux-ubuntu14
 set     topdir          /opt/sifive/$pkg/$version-$platform
 
 prepend-path    --delim ":"     PATH            $topdir/bin
+#used for e-sdk
+setenv                          RISCV_PATH      $topdir

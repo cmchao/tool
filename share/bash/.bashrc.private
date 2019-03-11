@@ -214,7 +214,7 @@ alias drun="docker run"
 alias dst="docker stop"
 
 #work
-alias towt="cd ~/work/tmp"
+alias towt="cd ~/repo"
 alias totmp="cd /tmp"
 
 

@@ -12,6 +12,7 @@ filetype indent on
 au BufNewFile,BufRead *.dml set filetype=dml
 au BufNewFile,BufRead *.go set filetype=go
 au BufNewFile,BufRead *.sls set filetype=sls
+au BufNewFile,BufRead *.isa set filetype=cpp
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vundle management
